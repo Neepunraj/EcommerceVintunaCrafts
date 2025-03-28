@@ -1,15 +1,11 @@
+"use client";
 import { adminNavOptions, navOptions } from "@/utils";
-import { Route } from "next";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { usePathname, useRouter } from "next/navigation";
 import { FC, Fragment, useContext, useState } from "react";
 import CommonModal from "../commonModal";
-import { GlobalContext, GlobalContextType } from "@/context";
-interface NavITems {
-  adminView: boolean;
-  router: AppRouterInstance;
-  isModalView: boolean;
-}
+import { GlobalContext } from "@/context";
+import { NavITems } from "@/interfaces";
+
 const NavItems = ({ isModalView = false, adminView, router }: NavITems) => {
   return (
     <div
@@ -18,7 +14,7 @@ const NavItems = ({ isModalView = false, adminView, router }: NavITems) => {
       }`}
     >
       <ul
-        className={`flex gap-3  items-center flex-row p-4 md:p-0 mt-4 font-medium rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 bg-white ${
+        className={`flex gap-2 items-center flex-col p-4 md:p-0 mt-4 font-medium rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 bg-white ${
           isModalView ? "border-none" : "border border-gray-100"
         }`}
       >

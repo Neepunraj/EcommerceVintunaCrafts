@@ -30,8 +30,7 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
         setProduct,
       }}
     >
-      <Navbar />
-      <main>{children}</main>
+      {children}
     </GlobalContext.Provider>
   );
 };
