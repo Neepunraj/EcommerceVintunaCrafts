@@ -1,8 +1,9 @@
-import { InputComponettypes, SelectComponentProps } from "@/interfaces";
-interface optiontype {
-  id: string;
-  label: string;
-}
+import {
+  InputComponettypes,
+  SelectComponentProps,
+  Selectoptions,
+} from "@/interfaces";
+
 const SelectComponent = ({
   label,
   value,
@@ -18,7 +19,7 @@ const SelectComponent = ({
         className="border placeholder-gray-400"
       >
         {options && options.length ? (
-          options.map((optionItem: optiontype) => (
+          options.map((optionItem: Selectoptions) => (
             <option value={optionItem.id} key={optionItem.id}>
               {optionItem.label}
             </option>

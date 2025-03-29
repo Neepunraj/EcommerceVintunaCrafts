@@ -14,15 +14,34 @@ export interface NavITems {
 
 export interface InputComponettypes {
   label: string;
-  onChange: () => void;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   value: string;
   type: string;
   placeholder: string;
 }
 
-export interface SelectComponentProps {
-  options: [];
+export interface Selectoptions {
+  id: string;
   label: string;
-  onChange: () => void;
+}
+export interface RegistrationformControls {
+  id: string;
+  type: string;
+  placeholder: string;
+  label: string;
+  componentType: string;
+  options?: Selectoptions[];
+}
+export interface LoginFormControls {
+  id: string;
+  type: string;
+  placeholder: string;
+  label: string;
+  componentType: string;
+}
+export interface SelectComponentProps {
+  options?: Selectoptions[];
+  label: string;
+  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   value: string;
 }
