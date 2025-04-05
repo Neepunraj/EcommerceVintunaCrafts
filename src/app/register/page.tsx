@@ -1,26 +1,29 @@
 "use client";
 import InputComponent from "@/component/formElements/inputComponent";
 import SelectComponent from "@/component/formElements/selectComponent";
+import ComponentLevelLoader from "@/component/loader/componentlevel";
+import Notification from "@/component/Notification";
+import { GlobalContext, GlobalContextType } from "@/context";
+import { UserDataProps } from "@/interfaces";
+import { registerAccount } from "@/services/register";
 import { registrationFormControls } from "@/utils";
+import { register } from "module";
 import { useRouter } from "next/navigation";
-import { FC, useState } from "react";
-interface FormDataProps {
-  name: string;
-  email: string;
-  password: string;
-  role: string;
-}
+import { FC, useContext, useState } from "react";
+import { toast } from "react-toastify";
+
 const initialFormData = {
   name: "",
   email: "",
   password: "",
   role: "costumer",
 };
-type FormDataKeys = keyof FormDataProps;
+type FormDataKeys = keyof UserDataProps;
 
 const Register: FC = () => {
-  const [formData, setFormData] = useState<FormDataProps>(initialFormData);
+  const [formData, setFormData] = useState<UserDataProps>(initialFormData);
   const [isRegistered, setIsRegistered] = useState(false);
+  const { pagelevelLoader, setPageLevelLoader } = useContext(GlobalContext);
   const router = useRouter();
   function formValid() {
     return formData &&
@@ -33,8 +36,23 @@ const Register: FC = () => {
       ? true
       : false;
   }
-  console.log(formData);
-  function handleRegisterOnSubmit() {}
+  console.log(pagelevelLoader);
+  async function handleRegisterOnSubmit() {
+    const data = await registerAccount(formData);
+    setPageLevelLoader(true);
+    if (data.success) {
+      toast.success(data.message, {
+        position: "top-right",
+      });
+      setIsRegistered(true);
+      setFormData(initialFormData);
+      setPageLevelLoader(false);
+    } else {
+      toast.error(data.message, { position: "top-right" });
+      setPageLevelLoader(false);
+    }
+  }
+
   return (
     <div className=" bg-white relative">
       <div className="flex items-center rounded-xl justify-between pt-0 pr-10 pb-0 pl-10 mb-2 mt-8 mr-auto xl:px-5 lg:flex-row  ">
@@ -91,10 +109,19 @@ const Register: FC = () => {
                     className="disabled:opacity-50 mb-3 inline-flex w-full items-center justify-center bg-black px-6 py-4 text-lg 
                    text-white rounded-xl transition-all duration-200 ease-in-out focus:shadow font-medium uppercase tracking-wide
                     "
-                    disabled={!formValid}
+                    disabled={!formValid()}
                     onClick={handleRegisterOnSubmit}
                   >
-                    Register
+                    {pagelevelLoader ? (
+                      <ComponentLevelLoader
+                        text="Registering"
+                        color={"#ffffff"}
+                        loading={pagelevelLoader}
+                        size={10}
+                      />
+                    ) : (
+                      "Register"
+                    )}
                   </button>
                 </div>
               )}
@@ -102,6 +129,7 @@ const Register: FC = () => {
           </div>
         </div>
       </div>
+      <Notification />
     </div>
   );
 };

@@ -45,3 +45,9 @@ export interface SelectComponentProps {
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   value: string;
 }
+export interface UserDataProps {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+}

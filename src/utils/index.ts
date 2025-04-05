@@ -69,12 +69,12 @@ export const registrationFormControls: RegistrationformControls[] = [
     componentType: "select",
     options: [
       {
-        id: "admin",
-        label: "Admin",
-      },
-      {
         id: "customer",
         label: "Customer",
+      },
+      {
+        id: "admin",
+        label: "Admin",
       },
     ],
   },
