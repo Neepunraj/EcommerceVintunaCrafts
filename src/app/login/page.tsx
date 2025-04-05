@@ -1,6 +1,7 @@
 "use client";
 import InputComponent from "@/component/formElements/inputComponent";
 import SelectComponent from "@/component/formElements/selectComponent";
+import connectToDB from "@/database";
 import { loginFormcontrols, registrationFormControls } from "@/utils";
 import { useRouter } from "next/navigation";
 import { FC, useState } from "react";
@@ -34,7 +35,9 @@ const Register: FC = () => {
       : false;
   }
   console.log(formData);
-  function handleRegisterOnSubmit() {}
+  function handleRegisterOnSubmit() {
+    connectToDB();
+  }
   return (
     <div className=" bg-white relative">
       <div className="flex items-center rounded-xl justify-between pt-0 pr-10 pb-0 pl-10 mb-2 mt-8 mr-auto xl:px-5 lg:flex-row  ">
@@ -68,8 +71,18 @@ const Register: FC = () => {
                   disabled={!formValid}
                   onClick={handleRegisterOnSubmit}
                 >
-                  Register
+                  Login
                 </button>
+                <div className="flex flex-col gap-2">
+                  <p>New to Website</p>
+                  <button
+                    onClick={() => router.push("/register")}
+                    className="inline-flex w-full justify-center items-center bg-black px-6 py-4 text-lg
+                  text-white transition-all duration-200 ease-in-out focus:shadow font-medium uppercase tracking-wide rounded-xl mb-2 "
+                  >
+                    Register
+                  </button>
+                </div>
               </div>
             </div>
           </div>
