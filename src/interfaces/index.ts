@@ -51,3 +51,7 @@ export interface UserDataProps {
   password: string;
   role: string;
 }
+export interface LoginUserProps {
+  email: string;
+  password: string;
+}

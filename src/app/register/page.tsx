@@ -7,7 +7,6 @@ import { GlobalContext, GlobalContextType } from "@/context";
 import { UserDataProps } from "@/interfaces";
 import { registerAccount } from "@/services/register";
 import { registrationFormControls } from "@/utils";
-import { register } from "module";
 import { useRouter } from "next/navigation";
 import { FC, useContext, useState } from "react";
 import { toast } from "react-toastify";
@@ -36,19 +35,24 @@ const Register: FC = () => {
       ? true
       : false;
   }
-  console.log(pagelevelLoader);
+
   async function handleRegisterOnSubmit() {
-    const data = await registerAccount(formData);
     setPageLevelLoader(true);
-    if (data.success) {
-      toast.success(data.message, {
-        position: "top-right",
-      });
-      setIsRegistered(true);
-      setFormData(initialFormData);
-      setPageLevelLoader(false);
-    } else {
-      toast.error(data.message, { position: "top-right" });
+    try {
+      const data = await registerAccount(formData);
+      if (data.success) {
+        setPageLevelLoader(true);
+        toast.success(data.message, {
+          position: "top-right",
+        });
+        setIsRegistered(true);
+        setFormData(initialFormData);
+      } else {
+        toast.error(data.message, { position: "top-right" });
+        setPageLevelLoader(false);
+      }
+    } catch (error: any) {
+      toast.error(error.message, { position: "top-right" });
       setPageLevelLoader(false);
     }
   }

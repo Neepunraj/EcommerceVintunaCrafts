@@ -2,20 +2,18 @@
 import InputComponent from "@/component/formElements/inputComponent";
 import SelectComponent from "@/component/formElements/selectComponent";
 import connectToDB from "@/database";
+import { login } from "@/services/login";
+
 import { loginFormcontrols, registrationFormControls } from "@/utils";
 import { useRouter } from "next/navigation";
 import { FC, useState } from "react";
 interface FormDataProps {
-  name: string;
   email: string;
   password: string;
-  role: string;
 }
 const initialFormData = {
-  name: "",
   email: "",
   password: "",
-  role: "costumer",
 };
 type FormDataKeys = keyof FormDataProps;
 
@@ -25,8 +23,6 @@ const Register: FC = () => {
   const router = useRouter();
   function formValid() {
     return formData &&
-      formData.name &&
-      formData.name.trim() !== "" &&
       formData.email &&
       formData.email.trim() !== "" &&
       formData.password &&
@@ -34,9 +30,14 @@ const Register: FC = () => {
       ? true
       : false;
   }
-  console.log(formData);
-  function handleRegisterOnSubmit() {
-    connectToDB();
+
+  async function handleRegisterOnSubmit() {
+    try {
+      const data = await login(formData);
+      console.log(data);
+    } catch (error: any) {
+      console.log("error inFetching", error);
+    }
   }
   return (
     <div className=" bg-white relative">
@@ -68,7 +69,7 @@ const Register: FC = () => {
                   className="disabled:opacity-50 mb-3 inline-flex w-full items-center justify-center bg-black px-6 py-4 text-lg 
                    text-white rounded-xl transition-all duration-200 ease-in-out focus:shadow font-medium uppercase tracking-wide
                     "
-                  disabled={!formValid}
+                  disabled={!formValid()}
                   onClick={handleRegisterOnSubmit}
                 >
                   Login
