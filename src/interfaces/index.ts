@@ -7,7 +7,7 @@ export interface NavOptions {
 }
 
 export interface NavITems {
-  adminView: boolean;
+  isAdminView: boolean;
   router: AppRouterInstance;
   isModalView: boolean;
 }
@@ -54,4 +54,49 @@ export interface UserDataProps {
 export interface LoginUserProps {
   email: string;
   password: string;
+}
+type Size = {
+  id: string;
+  label: string;
+};
+export type ProductDataType = {
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  sizes: Size[];
+  deliveryInfo: string;
+  onSale: "yes" | "no";
+  imageUrl: string;
+  priceDrop: number;
+};
+export const initialProductFormData: ProductDataType = {
+  name: "",
+  price: 0,
+  description: "",
+  category: "men",
+  sizes: [],
+  deliveryInfo: "",
+  onSale: "no",
+  imageUrl: "",
+  priceDrop: 0,
+};
+export type Product = {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  sizes: Size[];
+  deliveryInfo: string;
+  onSale: "yes" | "no";
+  imageUrl: string;
+  createdAt: string;
+  updatedAt: string;
+  __v?: number;
+  priceDrop: number;
+};
+
+export interface productType {
+  item: Product;
 }

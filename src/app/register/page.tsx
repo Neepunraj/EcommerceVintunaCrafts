@@ -8,7 +8,7 @@ import { UserDataProps } from "@/interfaces";
 import { registerAccount } from "@/services/register";
 import { registrationFormControls } from "@/utils";
 import { useRouter } from "next/navigation";
-import { FC, useContext, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const initialFormData = {
@@ -22,7 +22,8 @@ type FormDataKeys = keyof UserDataProps;
 const Register: FC = () => {
   const [formData, setFormData] = useState<UserDataProps>(initialFormData);
   const [isRegistered, setIsRegistered] = useState(false);
-  const { pagelevelLoader, setPageLevelLoader } = useContext(GlobalContext);
+  const { pagelevelLoader, setPageLevelLoader, isAuthUser } =
+    useContext(GlobalContext);
   const router = useRouter();
   function formValid() {
     return formData &&
@@ -56,7 +57,9 @@ const Register: FC = () => {
       setPageLevelLoader(false);
     }
   }
-
+  useEffect(() => {
+    if (isAuthUser) router.push("/");
+  }, [isAuthUser]);
   return (
     <div className=" bg-white relative">
       <div className="flex items-center rounded-xl justify-between pt-0 pr-10 pb-0 pl-10 mb-2 mt-8 mr-auto xl:px-5 lg:flex-row  ">

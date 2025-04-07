@@ -7,7 +7,7 @@ import { GlobalContext, initialUser } from "@/context";
 import { NavITems } from "@/interfaces";
 import Cookies from "js-cookie";
 
-const NavItems = ({ isModalView = false, adminView, router }: NavITems) => {
+const NavItems = ({ isModalView = false, isAdminView, router }: NavITems) => {
   return (
     <div
       className={`items-center justify-between w-full md:flex md:w-auto ${
@@ -19,7 +19,7 @@ const NavItems = ({ isModalView = false, adminView, router }: NavITems) => {
           isModalView ? "border-none" : "border border-gray-100"
         }`}
       >
-        {adminView
+        {isAdminView
           ? adminNavOptions.map((item) => (
               <li
                 className="cursor-pointer block py-2 pl-3 text-gray-900 rounded md:p-0"
@@ -57,10 +57,10 @@ const Navbar: FC = () => {
     setIsAuthUser,
     setUser,
   } = context;
-  const adminView = false;
 
   const router = useRouter();
   const pathName = usePathname();
+  const isAdminView = pathName.includes("/admin-view");
 
   function handleLogOut() {
     setIsAuthUser(false);
@@ -83,7 +83,7 @@ const Navbar: FC = () => {
             </span>
           </div>
           <div className="gap-2 justify-between flex md:order-2">
-            {!adminView && isAuthUser ? (
+            {!isAdminView && isAuthUser ? (
               <Fragment>
                 <button
                   className="
@@ -106,8 +106,9 @@ const Navbar: FC = () => {
               </Fragment>
             ) : null}
             {user?.role === "admin" ? (
-              adminView ? (
+              isAdminView ? (
                 <button
+                  onClick={() => router.push("/")}
                   className="
                 cursor-pointer
                  transition-transform transform
@@ -118,6 +119,7 @@ const Navbar: FC = () => {
                 </button>
               ) : (
                 <button
+                  onClick={() => router.push("/admin-view")}
                   className="
                 cursor-pointer
                   mt-1.5 inline-block bg-black  px-5 py-3 text-xs font-medium uppercase tracking-wide text-white 
@@ -175,13 +177,21 @@ const Navbar: FC = () => {
               </svg>
             </button>
           </div>
-          <NavItems isModalView={false} router={router} adminView={adminView} />
+          <NavItems
+            isModalView={false}
+            router={router}
+            isAdminView={isAdminView}
+          />
         </div>
       </nav>
       <CommonModal
         showModalTitle={false}
         mainContent={
-          <NavItems isModalView={true} router={router} adminView={adminView} />
+          <NavItems
+            isModalView={true}
+            router={router}
+            isAdminView={isAdminView}
+          />
         }
         show={showNavModal}
         setShow={setShowNavModal}

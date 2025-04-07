@@ -4,7 +4,7 @@ interface ComponentLoaderProps {
   text: string;
   color: string;
   loading: boolean;
-  size: number;
+  size?: number;
 }
 export default function ComponentLevelLoader({
   text,

@@ -11,6 +11,7 @@ import { loginFormcontrols, registrationFormControls } from "@/utils";
 import { useRouter } from "next/navigation";
 import { FC, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import ComponentLevelLoader from "@/component/loader/componentlevel";
 interface FormDataProps {
   email: string;
   password: string;
@@ -21,11 +22,17 @@ const initialFormData = {
 };
 type FormDataKeys = keyof FormDataProps;
 
-const Register: FC = () => {
+const Login: FC = () => {
   const [formData, setFormData] = useState<FormDataProps>(initialFormData);
   const [isRegistered, setIsRegistered] = useState(false);
-  const { user, setUser, setIsAuthUser, isAuthUser } =
-    useContext(GlobalContext);
+  const {
+    user,
+    setUser,
+    setIsAuthUser,
+    isAuthUser,
+    componentLevelLoader,
+    setComponentLevelLoader,
+  } = useContext(GlobalContext);
   const router = useRouter();
   function formValid() {
     return formData &&
@@ -38,6 +45,7 @@ const Register: FC = () => {
   }
 
   async function handleRegisterOnSubmit() {
+    setComponentLevelLoader({ loading: true, id: "" });
     const res = await login(formData);
     if (res.success) {
       toast.success(res.message, { position: "top-right" });
@@ -46,9 +54,11 @@ const Register: FC = () => {
       setFormData(initialFormData);
       Cookies.set("token", res?.finalData?.token);
       localStorage.setItem("user", JSON.stringify(res?.finalData?.user));
+      setComponentLevelLoader({ loading: false, id: "" });
     } else {
       setIsAuthUser(false);
       toast.error(res.message, { position: "top-right" });
+      setComponentLevelLoader({ loading: false, id: "" });
     }
   }
   useEffect(() => {
@@ -88,7 +98,17 @@ const Register: FC = () => {
                   disabled={!formValid()}
                   onClick={handleRegisterOnSubmit}
                 >
-                  Login
+                  {componentLevelLoader && componentLevelLoader.loading ? (
+                    <ComponentLevelLoader
+                      text="Loggin in"
+                      color={"#ffffff"}
+                      loading={
+                        componentLevelLoader && componentLevelLoader?.loading
+                      }
+                    />
+                  ) : (
+                    "Login"
+                  )}
                 </button>
                 <div className="flex flex-col gap-2">
                   <p>New to Website</p>
@@ -110,4 +130,4 @@ const Register: FC = () => {
   );
 };
 
-export default Register;
+export default Login;

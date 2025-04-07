@@ -1,24 +1,30 @@
 "use client";
-import Navbar from "@/component/navbar";
-import { LoginUserProps } from "@/interfaces";
+
+import {
+  initialProductFormData,
+  LoginUserProps,
+  Product,
+  ProductDataType,
+  productType,
+} from "@/interfaces";
 import { createContext, FC, ReactNode, useEffect, useState } from "react";
 import Cookies from "js-cookie";
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-}
+
 export type GlobalContextType = {
   showNavModal: boolean;
   setShowNavModal: (value: boolean) => void;
-  product: Product[];
-  setProduct: (products: Product[]) => void;
+  product: ProductDataType;
+  setProduct: (item: ProductDataType) => void;
   pagelevelLoader: boolean;
   setPageLevelLoader: (value: boolean) => void;
   user: UserProps;
   setUser: (user: UserProps) => void;
   isAuthUser: boolean;
   setIsAuthUser: (value: boolean) => void;
+  componentLevelLoader: LoadingProps;
+  setComponentLevelLoader: (loadin: LoadingProps) => void;
+  productToUpdate: ProductDataType;
+  setProductToUpdate: (item: ProductDataType) => void;
 };
 interface GlobbalStateProps {
   children: ReactNode;
@@ -35,10 +41,19 @@ export const initialUser = {
   role: "",
   _id: "",
 };
+interface LoadingProps {
+  loading: boolean;
+  id: string;
+}
+export const initalLoading = {
+  loading: false,
+  id: "",
+};
+
 const defaultContextValue: GlobalContextType = {
   showNavModal: false,
   setShowNavModal: () => {},
-  product: [],
+  product: initialProductFormData,
   setProduct: () => {},
   pagelevelLoader: false,
   setPageLevelLoader: () => {},
@@ -46,18 +61,25 @@ const defaultContextValue: GlobalContextType = {
   setUser: () => {},
   isAuthUser: false,
   setIsAuthUser: () => {},
+  componentLevelLoader: initalLoading,
+  setComponentLevelLoader: () => {},
+  productToUpdate: initialProductFormData,
+  setProductToUpdate: () => {},
 };
 
 export const GlobalContext =
   createContext<GlobalContextType>(defaultContextValue);
 const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
   const [showNavModal, setShowNavModal] = useState<boolean>(false);
-  const [product, setProduct] = useState<Product[]>([]);
+  const [product, setProduct] = useState<ProductDataType>(
+    initialProductFormData
+  );
+  const [productToUpdate, setProductToUpdate] = useState<ProductDataType>(
+    initialProductFormData
+  );
   const [pagelevelLoader, setPageLevelLoader] = useState<boolean>(false);
-  const [componentLevelLoader, setComponentLevelLoader] = useState({
-    loading: false,
-    id: "",
-  });
+  const [componentLevelLoader, setComponentLevelLoader] =
+    useState(initalLoading);
   const [isAuthUser, setIsAuthUser] = useState(false);
   const [user, setUser] = useState(initialUser);
 
@@ -86,6 +108,10 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
         setUser,
         isAuthUser,
         setIsAuthUser,
+        componentLevelLoader,
+        setComponentLevelLoader,
+        productToUpdate,
+        setProductToUpdate,
       }}
     >
       {children}
