@@ -1,7 +1,8 @@
 "use client";
 import Navbar from "@/component/navbar";
-import { createContext, FC, ReactNode, useState } from "react";
-
+import { LoginUserProps } from "@/interfaces";
+import { createContext, FC, ReactNode, useEffect, useState } from "react";
+import Cookies from "js-cookie";
 interface Product {
   id: string;
   name: string;
@@ -14,10 +15,26 @@ export type GlobalContextType = {
   setProduct: (products: Product[]) => void;
   pagelevelLoader: boolean;
   setPageLevelLoader: (value: boolean) => void;
+  user: UserProps;
+  setUser: (user: UserProps) => void;
+  isAuthUser: boolean;
+  setIsAuthUser: (value: boolean) => void;
 };
 interface GlobbalStateProps {
   children: ReactNode;
 }
+interface UserProps {
+  email: string;
+  name: string;
+  role: string;
+  _id: string;
+}
+export const initialUser = {
+  email: "",
+  name: "",
+  role: "",
+  _id: "",
+};
 const defaultContextValue: GlobalContextType = {
   showNavModal: false,
   setShowNavModal: () => {},
@@ -25,6 +42,10 @@ const defaultContextValue: GlobalContextType = {
   setProduct: () => {},
   pagelevelLoader: false,
   setPageLevelLoader: () => {},
+  user: initialUser,
+  setUser: () => {},
+  isAuthUser: false,
+  setIsAuthUser: () => {},
 };
 
 export const GlobalContext =
@@ -37,8 +58,21 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
     loading: false,
     id: "",
   });
-  const [isAuthUser, setIsAuthUser] = useState(null);
-  const [user, setUSer] = useState(null);
+  const [isAuthUser, setIsAuthUser] = useState(false);
+  const [user, setUser] = useState(initialUser);
+
+  useEffect(() => {
+    if (Cookies.get("token") !== undefined) {
+      setIsAuthUser(true);
+      const userData =
+        JSON.parse(localStorage.getItem("user") as string) || initialUser;
+
+      setUser(userData);
+    } else {
+      setIsAuthUser(false);
+      setUser(initialUser);
+    }
+  }, [Cookies]);
   return (
     <GlobalContext.Provider
       value={{
@@ -48,6 +82,10 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
         setProduct,
         pagelevelLoader,
         setPageLevelLoader,
+        user,
+        setUser,
+        isAuthUser,
+        setIsAuthUser,
       }}
     >
       {children}

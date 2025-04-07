@@ -2,7 +2,7 @@ import connectToDB from "@/database";
 import User from "@/models/user";
 import { hash } from "bcryptjs";
 import Joi, { object } from "joi";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const Schema = Joi.object({
   email: Joi.string().email().required(),
@@ -11,7 +11,7 @@ const Schema = Joi.object({
   role: Joi.string().required(),
 });
 export const dynamic = "force-dynamic";
-export async function POST(req: NextResponse) {
+export async function POST(req: NextRequest) {
   await connectToDB();
   const { email, password, name, role } = await req.json();
   const { error } = Schema.validate({
@@ -36,12 +36,12 @@ export async function POST(req: NextResponse) {
       });
     } else {
       const hasPassword = await hash(password, 12);
-      const newlyCreatedUser = {
+      const newlyCreatedUser = await User.create({
         name,
         email,
         password: hasPassword,
         role,
-      };
+      });
       if (newlyCreatedUser) {
         return NextResponse.json({
           success: true,

@@ -1,12 +1,16 @@
 "use client";
 import InputComponent from "@/component/formElements/inputComponent";
 import SelectComponent from "@/component/formElements/selectComponent";
+import Notification from "@/component/Notification";
+import { GlobalContext } from "@/context";
 import connectToDB from "@/database";
 import { login } from "@/services/login";
+import Cookies from "js-cookie";
 
 import { loginFormcontrols, registrationFormControls } from "@/utils";
 import { useRouter } from "next/navigation";
-import { FC, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 interface FormDataProps {
   email: string;
   password: string;
@@ -20,6 +24,8 @@ type FormDataKeys = keyof FormDataProps;
 const Register: FC = () => {
   const [formData, setFormData] = useState<FormDataProps>(initialFormData);
   const [isRegistered, setIsRegistered] = useState(false);
+  const { user, setUser, setIsAuthUser, isAuthUser } =
+    useContext(GlobalContext);
   const router = useRouter();
   function formValid() {
     return formData &&
@@ -32,13 +38,23 @@ const Register: FC = () => {
   }
 
   async function handleRegisterOnSubmit() {
-    try {
-      const data = await login(formData);
-      console.log(data);
-    } catch (error: any) {
-      console.log("error inFetching", error);
+    const res = await login(formData);
+    if (res.success) {
+      toast.success(res.message, { position: "top-right" });
+      setIsAuthUser(true);
+      setUser(res?.finalData?.user);
+      setFormData(initialFormData);
+      Cookies.set("token", res?.finalData?.token);
+      localStorage.setItem("user", JSON.stringify(res?.finalData?.user));
+    } else {
+      setIsAuthUser(false);
+      toast.error(res.message, { position: "top-right" });
     }
   }
+  useEffect(() => {
+    if (isAuthUser) router.push("/");
+  }, [isAuthUser]);
+
   return (
     <div className=" bg-white relative">
       <div className="flex items-center rounded-xl justify-between pt-0 pr-10 pb-0 pl-10 mb-2 mt-8 mr-auto xl:px-5 lg:flex-row  ">
@@ -89,6 +105,7 @@ const Register: FC = () => {
           </div>
         </div>
       </div>
+      <Notification />
     </div>
   );
 };

@@ -3,8 +3,9 @@ import { adminNavOptions, navOptions } from "@/utils";
 import { usePathname, useRouter } from "next/navigation";
 import { FC, Fragment, useContext, useState } from "react";
 import CommonModal from "../commonModal";
-import { GlobalContext } from "@/context";
+import { GlobalContext, initialUser } from "@/context";
 import { NavITems } from "@/interfaces";
+import Cookies from "js-cookie";
 
 const NavItems = ({ isModalView = false, adminView, router }: NavITems) => {
   return (
@@ -48,14 +49,26 @@ const Navbar: FC = () => {
   if (!context) {
     throw new Error("MyComponent must be used within a GlobalProvider");
   }
-  const { showNavModal, setShowNavModal } = context;
+  const {
+    showNavModal,
+    setShowNavModal,
+    isAuthUser,
+    user,
+    setIsAuthUser,
+    setUser,
+  } = context;
   const adminView = false;
-  const isAuthUser = true;
-  const user = {
-    role: "admin",
-  };
+
   const router = useRouter();
   const pathName = usePathname();
+
+  function handleLogOut() {
+    setIsAuthUser(false);
+    setUser(initialUser);
+    Cookies.remove("token");
+    localStorage.removeItem("user");
+    router.push("/");
+  }
 
   return (
     <>
@@ -117,6 +130,7 @@ const Navbar: FC = () => {
             ) : null}
             {isAuthUser ? (
               <button
+                onClick={handleLogOut}
                 className="
               cursor-pointer
                 mt-1.5 inline-block bg-black  px-5 py-3 text-xs font-medium uppercase tracking-wide text-white 
@@ -127,6 +141,7 @@ const Navbar: FC = () => {
               </button>
             ) : (
               <button
+                onClick={() => router.push("/login")}
                 className="
               cursor-pointer
                 mt-1.5 inline-block bg-black  px-5 py-3 text-xs font-medium uppercase tracking-wide text-white 

@@ -10,9 +10,15 @@ export const login = async (formData: LoginUserProps) => {
       },
       body: JSON.stringify(formData),
     });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "unexpected Error During Login ");
+    }
     const data = await response.json();
+    console.log(data);
     return data;
   } catch (error: any) {
-    console.log("Error fetching Login Details", error);
+    console.error("Error fetching Login Details", error);
+    return { success: false, message: error.message || "Error during login." };
   }
 };

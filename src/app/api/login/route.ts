@@ -11,9 +11,11 @@ const schema = Joi.object({
 });
 export const dynamic = "force-dynamic";
 
-export async function POST(req: NextRequest) {
+export async function POST(req: any) {
   await connectToDB();
+
   const { email, password } = await req.json();
+  console.log(email, password);
   const { error } = schema.validate({ email, password });
   if (error) {
     return NextResponse.json({
@@ -23,7 +25,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const checkUser = await User.findOne(email);
+    const checkUser = await User.findOne({ email });
     if (!checkUser) {
       return NextResponse.json({
         success: false,
