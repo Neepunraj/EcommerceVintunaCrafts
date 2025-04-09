@@ -1,9 +1,7 @@
 import mongoose from "mongoose";
 
 const connectToDB = async () => {
-  const connectionUrl = process.env.MONGOURL;
-
-  await mongoose
+  const connectionUrl = await mongoose
     .connect(connectionUrl as string)
     .then(() => console.log(" Ecommerce database connected Successfully"))
     .catch((error) =>
