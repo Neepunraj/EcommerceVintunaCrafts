@@ -1,4 +1,5 @@
 import Cookies from "js-cookie";
+
 export const AddNewPrdocut = async (formData: any) => {
   try {
     const response = await fetch("/api/admin/add-product", {
@@ -44,6 +45,7 @@ export const getAllAdminProducts = async () => {
     console.log(error);
   }
 };
+
 export const updateProduct = async (formData: any) => {
   try {
     const response = await fetch("/api/admin/update-product", {
@@ -60,6 +62,7 @@ export const updateProduct = async (formData: any) => {
     console.log(error);
   }
 };
+
 export const DeleteProduct = async (id: string) => {
   try {
     const response = await fetch(`/api/admin/delete-product?id=${id}`, {

@@ -173,7 +173,11 @@ export const adminAddProductformControls = [
     componentType: "input",
   },
 ];
-export const AvailableSizes = [
+export type SizeTypes = {
+  id: string;
+  label: string;
+};
+export const AvailableSizes: SizeTypes[] = [
   {
     id: "s",
     label: "S",

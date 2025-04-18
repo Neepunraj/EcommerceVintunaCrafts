@@ -1,9 +1,11 @@
 import { productType } from "@/interfaces";
+import { useRouter } from "next/navigation";
 import React, { FC } from "react";
 
 function ProductTile({ item }: productType) {
+  const router = useRouter();
   return (
-    <div>
+    <div onClick={() => router.push(`/product/${item._id}`)}>
       <div className="overflow-hidden aspect-w-1 aspect-h-1 h-52 ">
         <img
           className="h-full w-full object-cover transition-all duration-300 group-hover:scale-125 "

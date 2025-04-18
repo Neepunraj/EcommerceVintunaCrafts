@@ -1,6 +1,7 @@
 import connectToDB from "@/database";
 import AuthUSer from "@/middleware/AuthUSer";
 import Product from "@/models/product";
+import { error } from "console";
 import { NextRequest, NextResponse } from "next/server";
 import { URL } from "url";
 

@@ -55,7 +55,7 @@ export interface LoginUserProps {
   email: string;
   password: string;
 }
-type Size = {
+export type Size = {
   id: string;
   label: string;
 };

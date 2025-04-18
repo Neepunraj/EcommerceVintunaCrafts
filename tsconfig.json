@@ -27,7 +27,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/component/commonModal/index.js"
+    "src/component/commonModal/index.js",
+    "src/component/formElements/TileComponent/index.js"
   ],
   "exclude": ["node_modules"]
 }
