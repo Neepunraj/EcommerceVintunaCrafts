@@ -23,8 +23,8 @@ export type GlobalContextType = {
   setIsAuthUser: (value: boolean) => void;
   componentLevelLoader: LoadingProps;
   setComponentLevelLoader: (loadin: LoadingProps) => void;
-  productToUpdate: ProductDataType;
-  setProductToUpdate: (item: ProductDataType) => void;
+  productToUpdate: ProductDataType | null;
+  setProductToUpdate: (item: ProductDataType | null) => void;
 };
 interface GlobbalStateProps {
   children: ReactNode;
@@ -74,9 +74,8 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
   const [product, setProduct] = useState<ProductDataType>(
     initialProductFormData
   );
-  const [productToUpdate, setProductToUpdate] = useState<ProductDataType>(
-    initialProductFormData
-  );
+  const [productToUpdate, setProductToUpdate] =
+    useState<ProductDataType | null>(null);
   const [pagelevelLoader, setPageLevelLoader] = useState<boolean>(false);
   const [componentLevelLoader, setComponentLevelLoader] =
     useState(initalLoading);
