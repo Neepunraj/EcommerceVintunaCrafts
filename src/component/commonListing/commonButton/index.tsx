@@ -7,7 +7,7 @@ import React, { useContext } from "react";
 import { toast } from "react-toastify";
 
 const ProductButton = ({ item }: productType) => {
-  const { componentLevelLoader, setComponentLevelLoader } =
+  const { componentLevelLoader, setComponentLevelLoader, setProductToUpdate } =
     useContext(GlobalContext);
   const pathname = usePathname();
   const isAdminView = pathname.includes("admin-view");
@@ -22,7 +22,7 @@ const ProductButton = ({ item }: productType) => {
     if (res.success) {
       setComponentLevelLoader({
         loading: false,
-        id: "",
+        id: item._id,
       });
       toast.success(res.message, { position: "top-right" });
       router.refresh();
@@ -30,7 +30,7 @@ const ProductButton = ({ item }: productType) => {
       toast.error(res.message, { position: "top-right" });
       setComponentLevelLoader({
         loading: false,
-        id: "",
+        id: item._id,
       });
     }
   }
@@ -40,6 +40,7 @@ const ProductButton = ({ item }: productType) => {
         <>
           <button
             onClick={() => {
+              setProductToUpdate(item);
               router.push("/admin-view/add-product");
             }}
             className="mt-1.5 flex w-full justify-center bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white"
@@ -50,7 +51,9 @@ const ProductButton = ({ item }: productType) => {
             onClick={() => handleDeleteProduct(item._id)}
             className="mt-1.5 flex w-full justify-center bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white"
           >
-            {componentLevelLoader && componentLevelLoader.loading ? (
+            {componentLevelLoader &&
+            componentLevelLoader.loading &&
+            item._id === componentLevelLoader.id ? (
               <ComponentLevelLoader
                 text={"Deleting Product"}
                 color={"#ffffff"}

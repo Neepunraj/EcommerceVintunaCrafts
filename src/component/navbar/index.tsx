@@ -86,6 +86,7 @@ const Navbar: FC = () => {
             {!isAdminView && isAuthUser ? (
               <Fragment>
                 <button
+                  onClick={() => router.push("/account")}
                   className="
                   cursor-pointer
                    transition-transform transform
@@ -95,6 +96,7 @@ const Navbar: FC = () => {
                   Account
                 </button>
                 <button
+                  onClick={() => router.push("/cart")}
                   className="
                   cursor-pointer
                    transition-transform transform

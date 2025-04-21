@@ -7,11 +7,22 @@ import Notification from "@/component/Notification";
 import { GlobalContext } from "@/context";
 import { ProductDataType } from "@/interfaces";
 import { AddNewPrdocut, updateProduct } from "@/services/product";
-import { adminAddProductformControls, AvailableSizes } from "@/utils";
+import {
+  adminAddProductformControls,
+  AvailableSizes,
+  firebaseConfig,
+  firebaseStorageURL,
+} from "@/utils";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "@firebase/storage";
+import { initializeApp } from "firebase/app";
 import { useRouter } from "next/navigation";
-import { FC, useContext, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { getDownloadURL } from "firebase/storage";
 
 const initialFormdata: ProductDataType = {
   name: "",
@@ -25,8 +36,37 @@ const initialFormdata: ProductDataType = {
   priceDrop: 0,
 };
 type formatDataKeys = keyof ProductDataType;
+const app = initializeApp(firebaseConfig);
+const storage = getStorage(app, firebaseStorageURL);
 
-async function helperForUploadingImageTOFireBase(file: any) {}
+const createUniqueFileName = (getFile: any) => {
+  const timeStamp = Date.now();
+  const randomStringValue = Math.random().toString(36).substring(2, 12);
+  return `${getFile.name}-${timeStamp}-${randomStringValue}`;
+};
+
+async function helperForUploadingImageTOFireBase(file: any) {
+  const getFileName = createUniqueFileName(file);
+  const storageReference = ref(storage, `ecommerce/${getFileName}`);
+
+  const uploadImage = uploadBytesResumable(storageReference, file);
+
+  return new Promise((resolve, reject) => {
+    uploadImage.on(
+      "state_changed",
+      (snapshot) => {},
+      (error) => {
+        console.log(error);
+        reject(error);
+      },
+      () => {
+        getDownloadURL(uploadImage.snapshot.ref)
+          .then((downloadurl) => resolve(downloadurl))
+          .catch((error) => reject(error));
+      }
+    );
+  });
+}
 
 const AdminAddNewProduct: FC = () => {
   const [formData, setformData] = useState<ProductDataType>(initialFormdata);
@@ -38,9 +78,38 @@ const AdminAddNewProduct: FC = () => {
   } = useContext(GlobalContext);
 
   const router = useRouter();
-  async function handleImage(event) {}
+  async function handleImage(event: any) {
+    event.preventDefault();
+    const extractImageUrl = await helperForUploadingImageTOFireBase(
+      event.target.files[0]
+    );
 
-  function handleClick() {}
+    if (extractImageUrl !== "") {
+      setformData({
+        ...formData,
+        imageUrl: extractImageUrl as string,
+      });
+    }
+  }
+  interface DataItem {
+    id: string;
+    label: string;
+  }
+
+  function handleSizeClick(getcurrentITem: DataItem) {
+    let cpysizes = [...formData.sizes];
+    const index = cpysizes.findIndex((item) => item.id === getcurrentITem.id);
+    if (index === -1) {
+      cpysizes.push(getcurrentITem);
+    } else {
+      cpysizes = cpysizes.filter((item) => item.id !== getcurrentITem.id);
+    }
+    setformData({
+      ...formData,
+      sizes: cpysizes,
+    });
+  }
+  console.log(" this is current", productToUpdate);
   async function handleAddProduct() {
     setComponentLevelLoader({
       loading: true,
@@ -58,7 +127,7 @@ const AdminAddNewProduct: FC = () => {
       setformData(initialFormdata);
       setProductToUpdate(null);
       setTimeout(() => {
-        router.push("/admin-view/all-product");
+        router.push("/admin-view/all-products");
       }, 1000);
     } else {
       toast.error(res.message, {
@@ -66,6 +135,10 @@ const AdminAddNewProduct: FC = () => {
       });
     }
   }
+  useEffect(() => {
+    if (productToUpdate !== null) setformData(productToUpdate);
+  }, [productToUpdate]);
+
   return (
     <div className="w-full mt-5 mr-0 mb-0 ml-0 relative">
       <div className="flex flex-col items-start justify-start p-10 bg-white shadow-2xl rounded-xl relative">
@@ -81,7 +154,7 @@ const AdminAddNewProduct: FC = () => {
             {/* tilecomponent */}
             <TileComponent
               selected={formData.sizes}
-              onClick={handleClick}
+              onClick={handleSizeClick}
               data={AvailableSizes}
             />
           </div>

@@ -25,6 +25,10 @@ export type GlobalContextType = {
   setComponentLevelLoader: (loadin: LoadingProps) => void;
   productToUpdate: ProductDataType | null;
   setProductToUpdate: (item: ProductDataType | null) => void;
+  showCartModal: boolean;
+  setShowCartModal: (value: boolean) => void;
+  cartItems: any[];
+  setCartItems: (item: any) => void;
 };
 interface GlobbalStateProps {
   children: ReactNode;
@@ -65,6 +69,10 @@ const defaultContextValue: GlobalContextType = {
   setComponentLevelLoader: () => {},
   productToUpdate: initialProductFormData,
   setProductToUpdate: () => {},
+  showCartModal: false,
+  setShowCartModal: () => {},
+  cartItems: [],
+  setCartItems: () => {},
 };
 
 export const GlobalContext =
@@ -81,6 +89,8 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
     useState(initalLoading);
   const [isAuthUser, setIsAuthUser] = useState(false);
   const [user, setUser] = useState(initialUser);
+  const [cartItems, setCartItems] = useState([]);
+  const [showCartModal, setShowCartModal] = useState(false);
 
   useEffect(() => {
     if (Cookies.get("token") !== undefined) {
@@ -111,6 +121,10 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
         setComponentLevelLoader,
         productToUpdate,
         setProductToUpdate,
+        showCartModal,
+        setShowCartModal,
+        cartItems,
+        setCartItems,
       }}
     >
       {children}
