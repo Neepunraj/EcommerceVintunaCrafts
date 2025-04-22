@@ -109,7 +109,7 @@ const AdminAddNewProduct: FC = () => {
       sizes: cpysizes,
     });
   }
-  console.log(" this is current", productToUpdate);
+
   async function handleAddProduct() {
     setComponentLevelLoader({
       loading: true,

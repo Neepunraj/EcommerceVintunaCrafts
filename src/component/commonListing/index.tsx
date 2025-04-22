@@ -1,14 +1,21 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Notification from "../Notification";
 import ProductTile from "./ProductTile";
 import ProductButton from "./commonButton";
 import { Product } from "@/interfaces";
+import { useRouter } from "next/navigation";
 
 interface dataProps {
   data: Product[];
 }
 const CommonListing = ({ data }: dataProps) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.refresh();
+  }, []);
+
   return (
     <section className="bg-white py-12 sm:py-16">
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">

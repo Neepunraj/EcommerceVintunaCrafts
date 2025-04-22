@@ -35,9 +35,9 @@ export const getAllCartITems = async (id: any) => {
   }
 };
 
-export const deleteFromCart = async (id: any) => {
+export const deleteFromCart = async (id: string) => {
   try {
-    const response = await fetch(`api/delete-from-cart?id=${id}`, {
+    const response = await fetch(`api/cart/delete-from-cart?id=${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${Cookies.get("token")}`,

@@ -100,3 +100,23 @@ export type Product = {
 export interface productType {
   item: Product;
 }
+export interface CartItem {
+  _id: string;
+  userID: string;
+  productID: Product;
+  quantity: number;
+  createdAt: string;
+  updatedAt: string;
+  __v?: number;
+}
+
+export interface LoadingProps {
+  loading: boolean;
+  id: string;
+}
+
+export interface NextResponseProps {
+  success: boolean;
+  message?: string;
+  data: Product[];
+}

@@ -1,10 +1,11 @@
 import CommonListing from "@/component/commonListing";
 import { getAllAdminProducts } from "@/services/product";
 import React from "react";
+import { NextResponseProps } from "../../../../interfaces/index";
 
 async function AllProduct() {
-  const getAllProducts = await getAllAdminProducts();
-
+  const getAllProducts: NextResponseProps = await getAllAdminProducts();
+  console.log(getAllProducts.data);
   return <CommonListing data={getAllProducts && getAllProducts.data} />;
 }
 

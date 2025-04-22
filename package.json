@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@firebase/storage": "^0.13.7",
-    "@headlessui/react": "^2.2.0",
+    "@headlessui/react": "^2.2.2",
     "bcryptjs": "^3.0.2",
     "bull": "^4.16.5",
     "cheerio": "^1.0.0",

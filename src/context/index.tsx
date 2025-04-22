@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  CartItem,
   initialProductFormData,
   LoginUserProps,
   Product,
@@ -27,8 +28,8 @@ export type GlobalContextType = {
   setProductToUpdate: (item: ProductDataType | null) => void;
   showCartModal: boolean;
   setShowCartModal: (value: boolean) => void;
-  cartItems: any[];
-  setCartItems: (item: any) => void;
+  cartItems: CartItem[];
+  setCartItems: (item: CartItem[]) => void;
 };
 interface GlobbalStateProps {
   children: ReactNode;
@@ -89,7 +90,7 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
     useState(initalLoading);
   const [isAuthUser, setIsAuthUser] = useState(false);
   const [user, setUser] = useState(initialUser);
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [showCartModal, setShowCartModal] = useState(false);
 
   useEffect(() => {

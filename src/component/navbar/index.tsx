@@ -6,6 +6,7 @@ import CommonModal from "../commonModal";
 import { GlobalContext, initialUser } from "@/context";
 import { NavITems } from "@/interfaces";
 import Cookies from "js-cookie";
+import CartModal from "../cartModal";
 
 const NavItems = ({ isModalView = false, isAdminView, router }: NavITems) => {
   return (
@@ -56,6 +57,8 @@ const Navbar: FC = () => {
     user,
     setIsAuthUser,
     setUser,
+    showCartModal,
+    setShowCartModal,
   } = context;
 
   const router = useRouter();
@@ -198,6 +201,7 @@ const Navbar: FC = () => {
         show={showNavModal}
         setShow={setShowNavModal}
       />
+      {showCartModal && <CartModal />}
     </>
   );
 };

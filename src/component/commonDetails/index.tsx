@@ -14,6 +14,7 @@ function CommonDetails({ item }: ProductITem) {
     setComponentLevelLoader,
     componentLevelLoader,
     user,
+    showCartModal,
     setShowCartModal,
   } = useContext(GlobalContext);
   async function handleAddtoCart(item: Product) {
@@ -33,15 +34,14 @@ function CommonDetails({ item }: ProductITem) {
       });
       setShowCartModal(true);
     } else {
-      toast.error(res.message, {
-        position: "top-right",
-      });
       setComponentLevelLoader({
         loading: false,
         id: "",
       });
+      setShowCartModal(true);
     }
   }
+  console.log(showCartModal);
   return (
     <section className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto px-4">
@@ -117,7 +117,7 @@ function CommonDetails({ item }: ProductITem) {
                     color={"#ffffff"}
                   />
                 ) : (
-                  "Add TO Cart"
+                  "Add To Cart"
                 )}
               </button>
             </div>

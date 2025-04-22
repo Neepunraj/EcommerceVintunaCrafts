@@ -16,6 +16,7 @@ function Cart() {
     componentLevelLoader,
     setComponentLevelLoader,
   } = useContext(GlobalContext);
+
   async function extractAllCartItems() {
     setPageLevelLoader(true);
     const res = await getAllCartITems(user?._id);
@@ -48,11 +49,13 @@ function Cart() {
   useEffect(() => {
     if (user !== null) extractAllCartItems();
   }, []);
-  async function handleDeleteCartItems(getCartItemID: any) {
+  async function handleDeleteCartItems(getCartItemID: string) {
     setComponentLevelLoader({
       loading: true,
       id: "",
     });
+    console.log(getCartItemID);
+
     const res = await deleteFromCart(getCartItemID);
     if (res.success) {
       setComponentLevelLoader({ loading: false, id: "" });

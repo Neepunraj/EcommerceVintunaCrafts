@@ -2,11 +2,14 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import ComponentLevelLoader from "../loader/componentlevel/index";
+import { CartItem, LoadingProps } from "@/interfaces";
+
 type CommonCart = {
-  cartItems: any[];
-  handleDeletCartItems: (item: any) => void;
-  componentLevelLoader: any;
+  cartItems: CartItem[];
+  handleDeletCartItems: (itemID: string) => void;
+  componentLevelLoader: LoadingProps;
 };
+
 function CommonCart({
   cartItems,
   handleDeletCartItems,
@@ -23,17 +26,15 @@ function CommonCart({
               <div className="flow-root">
                 {cartItems && cartItems.length ? (
                   <ul className="-my-8">
-                    {cartItems.map((cartItem: any) => (
+                    {cartItems.map((item: CartItem) => (
                       <li
                         className="flex-col flex space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0"
-                        key={cartItems.id}
+                        key={item._id}
                       >
                         <div className="shrink-0">
                           <img
                             src={
-                              cartItem &&
-                              cartItem.productID &&
-                              cartItem.productID.imageUrl
+                              item && item.productID && item.productID.imageUrl
                             }
                             alt="Product image"
                             className="h-24 w-25 max-w-full rounded-lg object-cover"
@@ -43,27 +44,21 @@ function CommonCart({
                           <div className="sm:col-gap-5 sm:grid sm:grid-cols-2">
                             <div className="pr-8 sm:pr-4">
                               <p className="text-base font-semibold text-gray-900">
-                                {cartItem &&
-                                  cartItem.productID &&
-                                  cartItem.productID.name}
+                                {item && item.productID && item.productID.name}
                               </p>
                             </div>
                             <div className="mt-4 flex gap-3 items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
                               <p className="shrink-0 w-20 text-base font-semibold text-gray-950 sm:order-1 sm:ml-8 sm:text-right">
                                 $
-                                {cartItem &&
-                                  cartItem.productID &&
-                                  cartItem.productID.price}
+                                {item && item.productID && item.productID.price}
                               </p>
                               <button
-                                onClick={() =>
-                                  handleDeletCartItems(cartItem.id)
-                                }
+                                onClick={() => handleDeletCartItems(item._id)}
                                 className="font-medium text-yellow-700 sm:order-2"
                               >
                                 {componentLevelLoader &&
                                 componentLevelLoader.loading &&
-                                componentLevelLoader.id === cartItem.id ? (
+                                componentLevelLoader.id === item._id ? (
                                   <ComponentLevelLoader
                                     text={"Removing"}
                                     loading={
