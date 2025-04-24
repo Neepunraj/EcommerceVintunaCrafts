@@ -51,6 +51,10 @@ export default function Home() {
         <div className="max-w-screen-xl px-4 py-8 mx-auto sm:py-12 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:items-stretch">
             <div className="grid p-6 bg-gray-100 rounded place-content-center sm:p-8">
+              <img
+                src="https://vintunacrafts.com/wp-content/uploads/2025/04/lamp.png"
+                alt="bg"
+              />
               <div className="max-w-md mx-auto text-center lg:text-left">
                 <div>
                   <h2 className="text-xl font-bold text-gray-900 sm:text-3xl">
@@ -90,7 +94,7 @@ export default function Home() {
                             <h3 className="font-medium text-gray-900">
                               {productItem.name}
                             </h3>
-                            <p className="mt-1 text-sm text-gray-800">
+                            <p className="mt-1 text-sm text-gray-800 font-bold">
                               ${productItem.price}{" "}
                               <span className="text-red-700">{`(-${productItem.priceDrop}%) Off`}</span>
                             </p>
@@ -112,7 +116,7 @@ export default function Home() {
             <li>
               <div className="relative block group">
                 <img
-                  src="https://images.unsplash.com/photo-1618898909019-010e4e234c55?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
+                  src="https://vintunacrafts.com/wp-content/uploads/2025/03/plain-brass-braided-copper-bracelet-side.webp"
                   className="object-cover w-full aspect-square"
                 />
                 <div className="absolute inset-0 flex flex-col items-start justify-end p-6">
@@ -129,7 +133,7 @@ export default function Home() {
             <li>
               <div className="relative block group">
                 <img
-                  src="https://images.unsplash.com/photo-1624623278313-a930126a11c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
+                  src="https://vintunacrafts.com/wp-content/uploads/2025/03/MAroon_Cream_buddha_Face_wall_hanging_statue-1.webp"
                   className="object-cover w-full aspect-square"
                 />
                 <div className="absolute inset-0 flex flex-col items-start justify-end p-6">
@@ -146,7 +150,7 @@ export default function Home() {
             <li className="lg:col-span-2 lg:col-start-2 lg:row-span-2 lg:row-start-1">
               <div className="relative block group">
                 <img
-                  src="https://images.unsplash.com/photo-1593795899768-947c4929449d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2672&q=80"
+                  src="https://vintunacrafts.com/wp-content/uploads/2025/03/gray-cat-cacoon-with-cat.jpg"
                   className="object-cover w-full aspect-square"
                 />
                 <div className="absolute inset-0 flex flex-col items-start justify-end p-6">
