@@ -3,10 +3,12 @@
 import {
   CartItem,
   initialProductFormData,
+  LoginFormControls,
   LoginUserProps,
   Product,
   ProductDataType,
   productType,
+  ShippingAddressType,
 } from "@/interfaces";
 import { createContext, FC, ReactNode, useEffect, useState } from "react";
 import Cookies from "js-cookie";
@@ -30,6 +32,10 @@ export type GlobalContextType = {
   setShowCartModal: (value: boolean) => void;
   cartItems: CartItem[];
   setCartItems: (item: CartItem[]) => void;
+  addresses: ShippingAddressType[];
+  setAddresses: (addressDetails: ShippingAddressType[]) => void;
+  addressFromData: ShippingAddressType;
+  setAddressFormData: (formdata: ShippingAddressType) => void;
 };
 interface GlobbalStateProps {
   children: ReactNode;
@@ -54,6 +60,14 @@ export const initalLoading = {
   loading: false,
   id: "",
 };
+export const initialAddress: ShippingAddressType = {
+  _id: "",
+  fullName: "",
+  city: "",
+  country: "",
+  postalCode: "",
+  address: "",
+};
 
 const defaultContextValue: GlobalContextType = {
   showNavModal: false,
@@ -74,6 +88,10 @@ const defaultContextValue: GlobalContextType = {
   setShowCartModal: () => {},
   cartItems: [],
   setCartItems: () => {},
+  addresses: [],
+  setAddresses: () => {},
+  addressFromData: initialAddress,
+  setAddressFormData: () => {},
 };
 
 export const GlobalContext =
@@ -92,6 +110,9 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
   const [user, setUser] = useState(initialUser);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [showCartModal, setShowCartModal] = useState(false);
+  const [addresses, setAddresses] = useState<ShippingAddressType[]>([]);
+  const [addressFromData, setAddressFormData] =
+    useState<ShippingAddressType>(initialAddress);
 
   useEffect(() => {
     if (Cookies.get("token") !== undefined) {
@@ -126,6 +147,10 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
         setShowCartModal,
         cartItems,
         setCartItems,
+        addresses,
+        setAddresses,
+        addressFromData,
+        setAddressFormData,
       }}
     >
       {children}

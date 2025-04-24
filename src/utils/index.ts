@@ -1,4 +1,8 @@
-import { NavOptions, RegistrationformControls } from "@/interfaces";
+import {
+  LoginFormControls,
+  NavOptions,
+  RegistrationformControls,
+} from "@/interfaces";
 
 export const navOptions: NavOptions[] = [
   {
@@ -189,5 +193,43 @@ export const AvailableSizes: SizeTypes[] = [
   {
     id: "l",
     label: "L",
+  },
+];
+
+export const addNewAddressFormControls: LoginFormControls[] = [
+  {
+    id: "fullName",
+    type: "input",
+    placeholder: "Enter your full name",
+    label: "Full Name",
+    componentType: "input",
+  },
+  {
+    id: "address",
+    type: "input",
+    placeholder: "Enter your full address",
+    label: "Address",
+    componentType: "input",
+  },
+  {
+    id: "city",
+    type: "input",
+    placeholder: "Enter your city",
+    label: "City",
+    componentType: "input",
+  },
+  {
+    id: "country",
+    type: "input",
+    placeholder: "Enter your country",
+    label: "Country",
+    componentType: "input",
+  },
+  {
+    id: "postalCode",
+    type: "input",
+    placeholder: "Enter your postal code",
+    label: "Postal Code",
+    componentType: "input",
   },
 ];

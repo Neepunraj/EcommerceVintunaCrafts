@@ -120,3 +120,25 @@ export interface NextResponseProps {
   message?: string;
   data: Product[];
 }
+export type ShippingAddressType = {
+  _id: string;
+  fullName: string;
+  address: string;
+  city: string;
+  country: string;
+  postalCode: string;
+};
+export type OrderItemType = {
+  qty: number;
+  product: string;
+};
+export interface OrderDataType {
+  _id: string;
+  shippingAddress: ShippingAddressType;
+  orderItems: OrderItemType[];
+  paymentMethod: string;
+  isPaid: boolean;
+  paidAt: Date;
+  isProcessing: boolean;
+  totalPrice: number;
+}

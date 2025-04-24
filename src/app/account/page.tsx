@@ -1,11 +1,165 @@
-import React from "react";
+"use client";
+import InputComponent from "@/component/formElements/inputComponent";
+import ComponentLevelLoader from "@/component/loader/componentlevel";
+import Notification from "@/component/Notification";
+import { GlobalContext, initialAddress } from "@/context";
+import {
+  addNewAddress,
+  fetchAllAddress,
+  updataAddress,
+} from "@/services/address";
+import { addNewAddressFormControls } from "@/utils";
+import { useRouter } from "next/navigation";
+import React, { useContext, useEffect, useState } from "react";
+import { PulseLoader } from "react-spinners";
+import { toast } from "react-toastify";
 
 interface Props {}
 
 function Page(props: Props) {
-  const {} = props;
+  const {
+    user,
+    pagelevelLoader,
+    addresses,
+    setAddresses,
+    addressFromData,
+    setAddressFormData,
+    componentLevelLoader,
+    setComponentLevelLoader,
+    setPageLevelLoader,
+  } = useContext(GlobalContext);
+  const [showAddressForm, setShowAddressForm] = useState<boolean>(false);
+  const [currentEditedAddressID, setCurrentEditedAdressID] = useState(null);
+  const router = useRouter();
+  async function extractAllAdress() {
+    setPageLevelLoader(false);
+    const res = await fetchAllAddress(user._id);
+    if (res.success) {
+      setPageLevelLoader(false);
+      setAddresses(res.data);
+    } else {
+      setPageLevelLoader(false);
+    }
+  }
 
-  return <div className=""> account</div>;
+  async function handleAddorUpdateAddress() {
+    setComponentLevelLoader({ loading: true, id: "" });
+    const res =
+      currentEditedAddressID !== null
+        ? await updataAddress({
+            ...addressFromData,
+            _id: currentEditedAddressID,
+          })
+        : await addNewAddress({ ...addressFromData, userID: user?._id });
+
+    if (res.success) {
+      setComponentLevelLoader({ loading: false, id: "" });
+      toast.success(res.message, { position: "top-right" });
+      setAddressFormData(initialAddress);
+      setCurrentEditedAdressID(null);
+      extractAllAdress();
+    } else {
+      toast.error(res.message, {
+        position: "top-right",
+      });
+      setAddressFormData(initialAddress);
+    }
+  }
+  useEffect(() => {
+    if (user !== null) extractAllAdress();
+  }, [user]);
+
+  return (
+    <section>
+      <div className="mx-auto bg-gray-100 px-4 sm:px-6 lg:px-8">
+        <div className="bg-white shadow">
+          <div className="p-6 sm:p-12">
+            <div className="flex flex-col space-y-4 md:space-y-0 md:space-x-6 md:flex-row">
+              {/* we have to render random user image here */}
+            </div>
+            <div className="flex flex-col flex-1">
+              <h4 className="text-lg font-semibold text-center md:text-left">
+                {user.name}
+              </h4>
+              <p>{user.name}</p>
+              <p>{user.role}</p>
+            </div>
+            <button
+              onClick={() => router.push("/orders")}
+              className="mt-5  inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide"
+            >
+              View Your Orders
+            </button>
+            <div className="mt-6">
+              <h1 className="font-bold text-lg">Your Addresses :</h1>
+              {pagelevelLoader ? (
+                <PulseLoader
+                  color={"#000000"}
+                  loading={pagelevelLoader}
+                  size={15}
+                  data-testid="loader"
+                />
+              ) : (
+                <div className="mt-4 flex flex-col gap-4">
+                  {addresses && addresses.length ? (
+                    ""
+                  ) : (
+                    <p>No Address Found Please Add a New Address</p>
+                  )}
+                </div>
+              )}
+            </div>
+            <div className="mt-4">
+              <button
+                onClick={() => setShowAddressForm(!showAddressForm)}
+                className="mt-5 inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide"
+              >
+                {showAddressForm ? "Hide Address Form" : "Add New Address"}
+              </button>
+            </div>
+            {showAddressForm ? (
+              <div className="mt-5">
+                <div className="w-full mt-6 mr-0 ml-0 space-y-8">
+                  {addNewAddressFormControls.map((controlITem) => (
+                    <InputComponent
+                      key={controlITem.id}
+                      type={controlITem.type}
+                      placeholder={controlITem.placeholder}
+                      label={controlITem.label}
+                      value={addressFromData[controlITem.id]}
+                      onChange={(event) =>
+                        setAddressFormData({
+                          ...addressFromData,
+                          [controlITem.id]: event.target.value,
+                        })
+                      }
+                    />
+                  ))}
+                </div>
+                <button
+                  onClick={handleAddorUpdateAddress}
+                  className="mt-5 inline-block text-white text-xs font-medium uppercase  bg-black tracking-wide px-5 py-3"
+                >
+                  {componentLevelLoader && componentLevelLoader.loading ? (
+                    <ComponentLevelLoader
+                      text={"Saving"}
+                      color={"#ffffff"}
+                      loading={
+                        componentLevelLoader && componentLevelLoader.loading
+                      }
+                    />
+                  ) : (
+                    "Save"
+                  )}
+                </button>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </div>
+      <Notification />
+    </section>
+  );
 }
 
 export default Page;
