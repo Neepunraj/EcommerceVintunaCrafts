@@ -142,6 +142,14 @@ export const adminAddProductformControls = [
         id: "kids",
         label: "kids",
       },
+      {
+        id: "souviers",
+        label: "Souviners",
+      },
+      {
+        id: "lampshades",
+        label: "Lampshades",
+      },
     ],
   },
   {
@@ -233,3 +241,13 @@ export const addNewAddressFormControls: LoginFormControls[] = [
     componentType: "input",
   },
 ];
+export const firebaseConfig = {
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: "next-js-ecommerce-7404c.firebaseapp.com",
+  projectId: "next-js-ecommerce-7404c",
+  storageBucket: "next-js-ecommerce-7404c.appspot.com",
+  messagingSenderId: "852369128878",
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: "G-1ZQMG041MG",
+};
+export const firebaseStorageURL = "gs://next-js-ecommerce-7404c.appspot.com";
