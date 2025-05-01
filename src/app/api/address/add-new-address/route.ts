@@ -1,10 +1,10 @@
 import connectToDB from "@/database";
+import { ShippingAddressType } from "@/interfaces";
 import AuthUSer from "@/middleware/AuthUSer";
 import Address from "@/models/address";
 import Joi from "joi";
 import { NextRequest, NextResponse } from "next/server";
 
-export const dynamic = "force-dynamic";
 const AddNewAddress = Joi.object({
   fullName: Joi.string().required(),
   address: Joi.string().required(),
@@ -13,7 +13,7 @@ const AddNewAddress = Joi.object({
   postalCode: Joi.string().required(),
   userID: Joi.string().required(),
 });
-
+export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   try {
     await connectToDB();
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     return NextResponse.json({
       success: false,
-      message: "error Occuresd",
+      message: "Error Occured",
     });
   }
 }

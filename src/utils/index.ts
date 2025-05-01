@@ -27,8 +27,18 @@ export const navOptions: NavOptions[] = [
   },
   {
     id: "listingKids",
-    label: "kids",
+    label: "Kids",
     path: "/product/listing/kids",
+  },
+  {
+    id: "souviners",
+    label: "Souviners",
+    path: "/product/listing/souviners",
+  },
+  {
+    id: "lampshades",
+    label: "Lampshades",
+    path: "/product/listing/lampshades",
   },
 ];
 export const adminNavOptions: NavOptions[] = [

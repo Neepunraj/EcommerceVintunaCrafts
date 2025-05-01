@@ -3,8 +3,10 @@ import InputComponent from "@/component/formElements/inputComponent";
 import ComponentLevelLoader from "@/component/loader/componentlevel";
 import Notification from "@/component/Notification";
 import { GlobalContext, initialAddress } from "@/context";
+import { NextResponseProps, ShippingAddressType } from "@/interfaces";
 import {
   addNewAddress,
+  deleteAddres,
   fetchAllAddress,
   updataAddress,
 } from "@/services/address";
@@ -29,11 +31,14 @@ function Page(props: Props) {
     setPageLevelLoader,
   } = useContext(GlobalContext);
   const [showAddressForm, setShowAddressForm] = useState<boolean>(false);
-  const [currentEditedAddressID, setCurrentEditedAdressID] = useState(null);
+  const [currentEditedAddressID, setCurrentEditedAdressID] = useState<
+    string | null
+  >(null);
   const router = useRouter();
   async function extractAllAdress() {
     setPageLevelLoader(false);
     const res = await fetchAllAddress(user._id);
+
     if (res.success) {
       setPageLevelLoader(false);
       setAddresses(res.data);
@@ -63,8 +68,36 @@ function Page(props: Props) {
         position: "top-right",
       });
       setAddressFormData(initialAddress);
+      setComponentLevelLoader({ loading: false, id: "" });
     }
   }
+  function handleUpdateAddress(getCurrentAddress: ShippingAddressType) {
+    setShowAddressForm(true);
+    setAddressFormData({
+      fullName: getCurrentAddress.fullName,
+      city: getCurrentAddress.city,
+      country: getCurrentAddress.city,
+      postalCode: getCurrentAddress.postalCode,
+      address: getCurrentAddress.address,
+    });
+    if (getCurrentAddress._id) {
+      setCurrentEditedAdressID(getCurrentAddress?._id);
+    }
+  }
+
+  async function handleDeleteAddress(getId: string) {
+    setComponentLevelLoader({ loading: true, id: getId });
+    const res: NextResponseProps = await deleteAddres(getId);
+    if (res.success) {
+      setComponentLevelLoader({ loading: false, id: getId });
+      toast.success(res.message, { position: "top-right" });
+      extractAllAdress();
+    } else {
+      setComponentLevelLoader({ loading: false, id: getId });
+      toast.error(res.message, { position: "top-right" });
+    }
+  }
+  console.log(addressFromData);
   useEffect(() => {
     if (user !== null) extractAllAdress();
   }, [user]);
@@ -102,7 +135,40 @@ function Page(props: Props) {
               ) : (
                 <div className="mt-4 flex flex-col gap-4">
                   {addresses && addresses.length ? (
-                    ""
+                    addresses.map((item) => (
+                      <div className="" key={item._id}>
+                        <p>Name : {item.fullName}</p>
+                        <p>Address : {item.address}</p>
+                        <p>City : {item.city}</p>
+                        <p>Country : {item.country}</p>
+                        <p>PostalCode : {item.postalCode}</p>
+                        <button
+                          onClick={() => handleUpdateAddress(item)}
+                          className="mt-5 mr-5 bg-black text-white inline-block px-5 py-3 text-xs font-medium tracking-wide uppercase"
+                        >
+                          Update
+                        </button>
+                        <button
+                          onClick={() => handleDeleteAddress(item._id)}
+                          className="mt-5 mr-5 bg-black text-white inline-block px-5 py-3 text-xs font-medium tracking-wide uppercase"
+                        >
+                          {componentLevelLoader &&
+                          componentLevelLoader.loading &&
+                          componentLevelLoader.id === item._id ? (
+                            <ComponentLevelLoader
+                              loading={
+                                componentLevelLoader &&
+                                componentLevelLoader.loading
+                              }
+                              text="deleting"
+                              color="#ccccccc"
+                            />
+                          ) : (
+                            "Delete"
+                          )}
+                        </button>
+                      </div>
+                    ))
                   ) : (
                     <p>No Address Found Please Add a New Address</p>
                   )}

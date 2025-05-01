@@ -5,6 +5,7 @@ import {
   initialProductFormData,
   LoginFormControls,
   LoginUserProps,
+  OrderDataType,
   Product,
   ProductDataType,
   productType,
@@ -36,6 +37,8 @@ export type GlobalContextType = {
   setAddresses: (addressDetails: ShippingAddressType[]) => void;
   addressFromData: ShippingAddressType;
   setAddressFormData: (formdata: ShippingAddressType) => void;
+  checkOutFormData: OrderDataType;
+  setCheckOutFormData: (item: OrderDataType) => void;
 };
 interface GlobbalStateProps {
   children: ReactNode;
@@ -68,6 +71,14 @@ export const initialAddress: ShippingAddressType = {
   postalCode: "",
   address: "",
 };
+export const intialCheckoutFormData: OrderDataType = {
+  shippingAddress: initialAddress,
+  paymentMethod: "",
+  totalPrice: 0,
+  isPaid: false,
+  paidAt: new Date(),
+  isProcessing: true,
+};
 
 const defaultContextValue: GlobalContextType = {
   showNavModal: false,
@@ -92,6 +103,8 @@ const defaultContextValue: GlobalContextType = {
   setAddresses: () => {},
   addressFromData: initialAddress,
   setAddressFormData: () => {},
+  checkOutFormData: intialCheckoutFormData,
+  setCheckOutFormData: () => {},
 };
 
 export const GlobalContext =
@@ -113,7 +126,9 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
   const [addresses, setAddresses] = useState<ShippingAddressType[]>([]);
   const [addressFromData, setAddressFormData] =
     useState<ShippingAddressType>(initialAddress);
-
+  const [checkOutFormData, setCheckOutFormData] = useState<OrderDataType>(
+    intialCheckoutFormData
+  );
   useEffect(() => {
     if (Cookies.get("token") !== undefined) {
       setIsAuthUser(true);
@@ -151,6 +166,8 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
         setAddresses,
         addressFromData,
         setAddressFormData,
+        checkOutFormData,
+        setCheckOutFormData,
       }}
     >
       {children}

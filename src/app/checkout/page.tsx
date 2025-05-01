@@ -2,12 +2,18 @@
 import Notification from "@/component/Notification";
 import { GlobalContext } from "@/context";
 import { useRouter } from "next/navigation";
+import { loadStripe } from "@stripe/stripe-js";
 import React, { useContext, useEffect, useState } from "react";
+import { callStripeSession } from "@/services/stripe";
 
-interface Props {}
-
-function Checkout(props: Props) {
-  const { cartItems, addresses, setAddresses } = useContext(GlobalContext);
+function Checkout() {
+  const {
+    cartItems,
+    addresses,
+    setAddresses,
+    checkOutFormData,
+    setCheckOutFormData,
+  } = useContext(GlobalContext);
 
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isOrderprocessing, setIsOrderProcessing] = useState(false);
@@ -15,7 +21,34 @@ function Checkout(props: Props) {
   const router = useRouter();
 
   useEffect(() => {}, [cartItems]);
+  const publishableKey: string =
+    process.env.NEXT_PUBLIC_STRIPE_PUBLISABLE || "";
+  const stripePromise = loadStripe(publishableKey);
+  async function handleCheckout() {
+    const stripe = await stripePromise;
+    const createLineItems = cartItems.map((item) => ({
+      price_data: {
+        currency: "usd",
+        product_data: {
+          images: [item.productID.imageUrl],
+          name: item.productID.name,
+        },
+        unit_amount: item.productID.price * 100,
+      },
+      quantity: 1,
+    }));
 
+    const res = await callStripeSession(createLineItems);
+    setIsOrderProcessing(true);
+    localStorage.setItem("stripe", "stripe");
+    localStorage.setItem("checkoutFormData", JSON.stringify(checkOutFormData));
+
+    /*   const { error } = await stripe.redirectToCheckout({
+      sessionId: res.id,
+    }); */
+
+    /*  console.log(error); */
+  }
   return (
     <>
       <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32 ">
@@ -112,7 +145,14 @@ function Checkout(props: Props) {
               </p>
             </div>
             <div className="pb-10">
-              <button className="disabled:opacity-50 mt-5 mr-5 w-full  inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide">
+              <button
+                disabled={
+                  (cartItems && cartItems.length === 0) ||
+                  Object.keys(checkOutFormData.shippingAddress).length === 0
+                }
+                onClick={handleCheckout}
+                className="disabled:opacity-50 mt-5 mr-5 w-full  inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide"
+              >
                 Checkout
               </button>
             </div>

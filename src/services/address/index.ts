@@ -57,6 +57,8 @@ export const deleteAddres = async (id: string) => {
         Authorization: `Bearer ${Cookies.get("token")}`,
       },
     });
+    const data = await res.json();
+    return data;
   } catch (error) {
     console.log(error);
   }
