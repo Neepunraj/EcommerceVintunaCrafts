@@ -1,7 +1,10 @@
 import AuthUSer from "@/middleware/AuthUSer";
 import { NextRequest, NextResponse } from "next/server";
+import { loadStripe } from "@stripe/stripe-js";
 
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripe = await loadStripe(process.env.STRIPE_SECRET_KEY || "", {
+  apiVersion: "2025-03-31",
+});
 
 export const dynamic = "force-dynamic";
 
@@ -15,8 +18,8 @@ export async function POST(req: NextRequest) {
         payment_method_types: ["card"],
         line_items: res,
         mode: "payment",
-        success_url: "http://localhost:3000/checkout" + "?status=success",
-        cancel_url: "http://localhost:3000/checkout" + "?status=cancel",
+        success_url: "https://localhost:3000/checkout" + "?status=success",
+        cancel_url: "https://localhost:3000/checkout" + "?status=cancel",
       });
 
       return NextResponse.json({

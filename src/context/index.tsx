@@ -64,7 +64,6 @@ export const initalLoading = {
   id: "",
 };
 export const initialAddress: ShippingAddressType = {
-  _id: "",
   fullName: "",
   city: "",
   country: "",

@@ -8,14 +8,7 @@ import connectToDB from "@/database";
 export async function PUT(req: NextRequest) {
   try {
     await connectToDB();
-    const { searchParams } = new URL(req.url);
-    const getId = searchParams.get("id");
-    if (!getId) {
-      return NextResponse.json({
-        success: false,
-        message: "User id required",
-      });
-    }
+
     const isAuthUser = await AuthUSer(req);
     if (isAuthUser) {
       const data: ShippingAddressType = await req.json();

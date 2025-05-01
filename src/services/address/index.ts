@@ -40,7 +40,7 @@ export const updataAddress = async (formData: any) => {
         "content-type": "application/json",
         Authorization: `Bearer ${Cookies.get("token")}`,
       },
-      body: JSON.parse(formData),
+      body: JSON.stringify(formData),
     });
     const data = await res.json();
     return data;

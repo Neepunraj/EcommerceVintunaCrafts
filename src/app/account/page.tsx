@@ -81,7 +81,7 @@ function Page(props: Props) {
       address: getCurrentAddress.address,
     });
     if (getCurrentAddress._id) {
-      setCurrentEditedAdressID(getCurrentAddress?._id);
+      setCurrentEditedAdressID(getCurrentAddress._id);
     }
   }
 
@@ -97,7 +97,7 @@ function Page(props: Props) {
       toast.error(res.message, { position: "top-right" });
     }
   }
-  console.log(addressFromData);
+
   useEffect(() => {
     if (user !== null) extractAllAdress();
   }, [user]);
@@ -149,7 +149,7 @@ function Page(props: Props) {
                           Update
                         </button>
                         <button
-                          onClick={() => handleDeleteAddress(item._id)}
+                          onClick={() => handleDeleteAddress(item._id!)}
                           className="mt-5 mr-5 bg-black text-white inline-block px-5 py-3 text-xs font-medium tracking-wide uppercase"
                         >
                           {componentLevelLoader &&
@@ -160,8 +160,8 @@ function Page(props: Props) {
                                 componentLevelLoader &&
                                 componentLevelLoader.loading
                               }
-                              text="deleting"
-                              color="#ccccccc"
+                              text="Deleting"
+                              color="#ffffff"
                             />
                           ) : (
                             "Delete"

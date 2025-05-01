@@ -1,10 +1,12 @@
 "use client";
 import Notification from "@/component/Notification";
-import { GlobalContext } from "@/context";
+import { GlobalContext, initialAddress } from "@/context";
 import { useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
 import React, { useContext, useEffect, useState } from "react";
 import { callStripeSession } from "@/services/stripe";
+import { fetchAllAddress } from "@/services/address";
+import { ShippingAddressType } from "@/interfaces";
 
 function Checkout() {
   const {
@@ -13,6 +15,7 @@ function Checkout() {
     setAddresses,
     checkOutFormData,
     setCheckOutFormData,
+    user,
   } = useContext(GlobalContext);
 
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -24,8 +27,10 @@ function Checkout() {
   const publishableKey: string =
     process.env.NEXT_PUBLIC_STRIPE_PUBLISABLE || "";
   const stripePromise = loadStripe(publishableKey);
+
   async function handleCheckout() {
     const stripe = await stripePromise;
+    console.log(cartItems);
     const createLineItems = cartItems.map((item) => ({
       price_data: {
         currency: "usd",
@@ -39,16 +44,51 @@ function Checkout() {
     }));
 
     const res = await callStripeSession(createLineItems);
+    console.log(publishableKey);
+    console.log(res);
     setIsOrderProcessing(true);
     localStorage.setItem("stripe", "stripe");
     localStorage.setItem("checkoutFormData", JSON.stringify(checkOutFormData));
 
-    /*   const { error } = await stripe.redirectToCheckout({
+    const { error } = await stripe.redirectToCheckout({
       sessionId: res.id,
-    }); */
+    });
 
-    /*  console.log(error); */
+    console.log(error);
   }
+
+  async function getAlladdress() {
+    const res = await fetchAllAddress(user._id);
+    if (res.success) setAddresses(res.data);
+  }
+
+  function handleSelectedAddress(getAddress: ShippingAddressType) {
+    if (getAddress._id === selectedAddress) {
+      setSelectedAddress(null);
+      setCheckOutFormData({
+        ...checkOutFormData,
+        shippingAddress: initialAddress,
+      });
+      return;
+    }
+
+    setSelectedAddress(getAddress._id);
+    setCheckOutFormData({
+      ...checkOutFormData,
+      shippingAddress: {
+        ...checkOutFormData.shippingAddress,
+        fullName: getAddress.fullName,
+        city: getAddress.city,
+        country: getAddress.country,
+        postalCode: getAddress.postalCode,
+        address: getAddress.address,
+      },
+    });
+  }
+  useEffect(() => {
+    if (user._id !== null) getAlladdress();
+  }, [user]);
+
   return (
     <>
       <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32 ">
@@ -88,8 +128,10 @@ function Checkout() {
             {addresses && addresses.length ? (
               addresses.map((item) => (
                 <div
-                  className={`border p-6 ${
-                    item._id === selectedAddress ? "border-red-900" : ""
+                  className={`border p-6 mt-2 ${
+                    item._id === selectedAddress
+                      ? "bg-green-600 text-white"
+                      : ""
                   }`}
                   key={item._id}
                 >
@@ -98,7 +140,10 @@ function Checkout() {
                   <p>City {item.city}</p>
                   <p>Country {item.country}</p>
                   <p>Postal code {item.postalCode}</p>
-                  <button className="mt-5 mr-5 inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide">
+                  <button
+                    onClick={() => handleSelectedAddress(item)}
+                    className="mt-5 mr-5 inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide"
+                  >
                     {item._id === selectedAddress
                       ? "Selected Address"
                       : "Select a address"}
