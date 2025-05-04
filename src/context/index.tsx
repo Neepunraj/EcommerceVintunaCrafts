@@ -45,6 +45,8 @@ export type GlobalContextType = {
   setOrderDetails: (item: OrderDetailsDataType) => void;
   allOrdersForUsers: OrderDataType[];
   setAllOrderForUsers: (item: OrderDataType[]) => void;
+  allOrdersForAllUsers: OrderDetailsDataType[];
+  setAllOrdersFroAllUsers: (item: OrderDetailsDataType[]) => void;
 };
 interface GlobbalStateProps {
   children: ReactNode;
@@ -125,6 +127,8 @@ const defaultContextValue: GlobalContextType = {
   setOrderDetails: () => {},
   allOrdersForUsers: [],
   setAllOrderForUsers: () => {},
+  allOrdersForAllUsers: [],
+  setAllOrdersFroAllUsers: () => {},
 };
 const protectedRoutes = ["cart", "checkout", "account", "orders", "admin-view"];
 const protectedAdminRoutes = [
@@ -163,7 +167,9 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
   const [allOrdersForUsers, setAllOrderForUsers] = useState<OrderDataType[]>(
     []
   );
-
+  const [allOrdersForAllUsers, setAllOrdersFroAllUsers] = useState<
+    OrderDetailsDataType[]
+  >([]);
   useEffect(() => {
     if (Cookies.get("token") !== undefined) {
       setIsAuthUser(true);
@@ -231,6 +237,8 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
         setOrderDetails,
         allOrdersForUsers,
         setAllOrderForUsers,
+        allOrdersForAllUsers,
+        setAllOrdersFroAllUsers,
       }}
     >
       {children}

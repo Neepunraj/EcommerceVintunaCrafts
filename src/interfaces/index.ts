@@ -46,6 +46,7 @@ export interface SelectComponentProps {
   value: string;
 }
 export interface UserDataProps {
+  _id?: string;
   name: string;
   email: string;
   password: string;
@@ -125,6 +126,12 @@ export interface NextResponseOrdersProp {
   message?: string;
   data: OrderDataType[];
 }
+
+export interface NextResponseOrderDetailsProps {
+  success: boolean;
+  message?: string;
+  data: OrderDetailsDataType[];
+}
 export type ShippingAddressType = {
   _id?: string;
   fullName: string;
@@ -159,4 +166,19 @@ export interface OrderDetailsDataType {
   isProcessing: boolean;
   totalPrice: number;
   createdAt: string;
+  updatedAt?: string;
+  user?: UserDataProps;
 }
+
+/* createdAt
+isPaid
+isProcessing
+orderItems
+paidAt
+paymentMethod
+shippingAddress
+totalPrice
+updatedAt
+user
+__v
+_id */

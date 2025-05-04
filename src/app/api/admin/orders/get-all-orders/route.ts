@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
     const authUser = await AuthUSer(req);
     if (authUser) {
       const getAllOrders = await Order.find({})
-        .populate("orderITems.product")
+        .populate("orderItems.product")
         .populate("user");
 
       if (getAllOrders) {
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     return NextResponse.json({
       success: false,
-      message: "Error getting the details trct",
+      message: "Error getting the order details",
     });
   }
 }
