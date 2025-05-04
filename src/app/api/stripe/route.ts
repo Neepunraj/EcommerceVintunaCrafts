@@ -2,12 +2,9 @@ import AuthUSer from "@/middleware/AuthUSer";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(
-  "sk_test_51PqEEhRogN8CI6sDKzNA9hkvUakQqeBKuTYDPBkRnr356z4SIb1Lp2ZkOZSN6Swqp4slOXkGTfVZ5dxXk6BJl6ra00bJ7zKiVh",
-  {
-    apiVersion: "2025-04-30.basil",
-  }
-);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2025-04-30.basil",
+});
 
 export const dynamic = "force-dynamic";
 
