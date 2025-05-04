@@ -7,10 +7,7 @@ let isConnected: mongoose.Connection["readyState"] | null = null;
 
 const connectToDB = async () => {
   try {
-    const connection = await mongoose.connect(connectionUrl, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    } as mongoose.ConnectOptions);
+    const connection = await mongoose.connect(connectionUrl);
     isConnected = connection.connections[0].readyState;
     console.log("connected to database successfully");
   } catch (error) {

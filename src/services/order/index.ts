@@ -32,7 +32,7 @@ export const getAllOrdersForUser = async (id: string) => {
   }
 };
 
-export const getOrderDetails = async (id: string) => {
+export const getOrderDetails = async (id: any) => {
   try {
     const res = await fetch(`/api/order/order-details?id=${id}`, {
       method: "GET",

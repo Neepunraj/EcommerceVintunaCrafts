@@ -120,6 +120,11 @@ export interface NextResponseProps {
   message?: string;
   data: Product[];
 }
+export interface NextResponseOrdersProp {
+  success: boolean;
+  message?: string;
+  data: OrderDataType[];
+}
 export type ShippingAddressType = {
   _id?: string;
   fullName: string;
@@ -131,7 +136,8 @@ export type ShippingAddressType = {
 };
 export type OrderItemType = {
   qty: number;
-  product: string;
+  product: ProductDataType;
+  _id?: string;
 };
 export interface OrderDataType {
   _id?: string;
@@ -142,4 +148,15 @@ export interface OrderDataType {
   paidAt: Date;
   isProcessing: boolean;
   totalPrice: number;
+}
+export interface OrderDetailsDataType {
+  _id: string;
+  shippingAddress: ShippingAddressType;
+  orderItems?: OrderItemType[];
+  paymentMethod: string;
+  isPaid: boolean;
+  paidAt: string;
+  isProcessing: boolean;
+  totalPrice: number;
+  createdAt: string;
 }

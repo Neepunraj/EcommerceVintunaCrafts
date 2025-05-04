@@ -6,6 +6,7 @@ import {
   LoginFormControls,
   LoginUserProps,
   OrderDataType,
+  OrderDetailsDataType,
   Product,
   ProductDataType,
   productType,
@@ -13,6 +14,7 @@ import {
 } from "@/interfaces";
 import { createContext, FC, ReactNode, useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { usePathname, useRouter } from "next/navigation";
 
 export type GlobalContextType = {
   showNavModal: boolean;
@@ -39,6 +41,10 @@ export type GlobalContextType = {
   setAddressFormData: (formdata: ShippingAddressType) => void;
   checkOutFormData: OrderDataType;
   setCheckOutFormData: (item: OrderDataType) => void;
+  orderDetails: OrderDetailsDataType;
+  setOrderDetails: (item: OrderDetailsDataType) => void;
+  allOrdersForUsers: OrderDataType[];
+  setAllOrderForUsers: (item: OrderDataType[]) => void;
 };
 interface GlobbalStateProps {
   children: ReactNode;
@@ -79,6 +85,17 @@ export const intialCheckoutFormData: OrderDataType = {
   isProcessing: true,
 };
 
+const initialOrderDetails: OrderDetailsDataType = {
+  _id: "",
+  shippingAddress: initialAddress,
+  orderItems: [],
+  paymentMethod: "",
+  isPaid: false,
+  paidAt: "",
+  isProcessing: false,
+  totalPrice: 0,
+  createdAt: "",
+};
 const defaultContextValue: GlobalContextType = {
   showNavModal: false,
   setShowNavModal: () => {},
@@ -104,11 +121,24 @@ const defaultContextValue: GlobalContextType = {
   setAddressFormData: () => {},
   checkOutFormData: intialCheckoutFormData,
   setCheckOutFormData: () => {},
+  orderDetails: initialOrderDetails,
+  setOrderDetails: () => {},
+  allOrdersForUsers: [],
+  setAllOrderForUsers: () => {},
 };
+const protectedRoutes = ["cart", "checkout", "account", "orders", "admin-view"];
+const protectedAdminRoutes = [
+  "/admin-view",
+  "/admin-view/add-product",
+  "/admin-view/all-products",
+];
 
 export const GlobalContext =
   createContext<GlobalContextType>(defaultContextValue);
+
 const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
+  const router = useRouter();
+  const pathname = usePathname();
   const [showNavModal, setShowNavModal] = useState<boolean>(false);
   const [product, setProduct] = useState<ProductDataType>(
     initialProductFormData
@@ -128,6 +158,12 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
   const [checkOutFormData, setCheckOutFormData] = useState<OrderDataType>(
     intialCheckoutFormData
   );
+  const [orderDetails, setOrderDetails] =
+    useState<OrderDetailsDataType>(initialOrderDetails);
+  const [allOrdersForUsers, setAllOrderForUsers] = useState<OrderDataType[]>(
+    []
+  );
+
   useEffect(() => {
     if (Cookies.get("token") !== undefined) {
       setIsAuthUser(true);
@@ -140,6 +176,30 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
       setUser(initialUser);
     }
   }, [Cookies]);
+  /*  useEffect(() => {
+    if (
+      protectedRoutes.some((route) => pathname.includes(route)) &&
+      pathname &&
+      pathname !== "/register" &&
+      !pathname.includes("product") &&
+      pathname !== "/" &&
+      user &&
+      Object.keys(user).length > 0
+    ) {
+      router.push("/login");
+    }
+  }, [pathname, user]); */
+
+  /*  useEffect(() => {
+    if (
+      protectedAdminRoutes.indexOf(pathname) > -1 &&
+      user !== null &&
+      user &&
+      Object.keys(user).length === 0 &&
+      user.role !== "admin"
+    )
+      router.push("/login");
+  }, [user, pathname]); */
   return (
     <GlobalContext.Provider
       value={{
@@ -167,6 +227,10 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
         setAddressFormData,
         checkOutFormData,
         setCheckOutFormData,
+        orderDetails,
+        setOrderDetails,
+        allOrdersForUsers,
+        setAllOrderForUsers,
       }}
     >
       {children}

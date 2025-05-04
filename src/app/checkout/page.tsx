@@ -1,12 +1,20 @@
 "use client";
 import Notification from "@/component/Notification";
-import { GlobalContext, initialAddress } from "@/context";
-import { useRouter } from "next/navigation";
-import { loadStripe } from "@stripe/stripe-js";
+import {
+  GlobalContext,
+  initialAddress,
+  intialCheckoutFormData,
+} from "@/context";
+import { useRouter, useSearchParams } from "next/navigation";
+import { loadStripe, Stripe } from "@stripe/stripe-js";
 import React, { useContext, useEffect, useState } from "react";
 import { callStripeSession } from "@/services/stripe";
 import { fetchAllAddress } from "@/services/address";
-import { ShippingAddressType } from "@/interfaces";
+import { NextResponseProps, ShippingAddressType } from "@/interfaces";
+import { createNewOrder } from "@/services/order";
+import { toast } from "react-toastify";
+import { getAllCartITems } from "@/services/cart";
+import { PulseLoader } from "react-spinners";
 
 function Checkout() {
   const {
@@ -15,6 +23,7 @@ function Checkout() {
     setAddresses,
     checkOutFormData,
     setCheckOutFormData,
+    setCartItems,
     user,
   } = useContext(GlobalContext);
 
@@ -22,15 +31,22 @@ function Checkout() {
   const [isOrderprocessing, setIsOrderProcessing] = useState(false);
   const [orderSuccess, setOrDerSuccess] = useState(false);
   const router = useRouter();
+  const params = useSearchParams();
 
-  useEffect(() => {}, [cartItems]);
-  const publishableKey: string =
-    process.env.NEXT_PUBLIC_STRIPE_PUBLISABLE || "";
-  const stripePromise = loadStripe(publishableKey);
+  const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISABLE;
+
+  if (!publishableKey) {
+    throw new Error("Stripe Publicable key is not defined");
+  }
+  const stripePromise: Promise<Stripe | null> = loadStripe(publishableKey);
 
   async function handleCheckout() {
     const stripe = await stripePromise;
-    console.log(cartItems);
+    if (!stripe) {
+      console.log("Stripe is not initialized properly");
+      return;
+    }
+    console.log(stripe);
     const createLineItems = cartItems.map((item) => ({
       price_data: {
         currency: "usd",
@@ -47,7 +63,7 @@ function Checkout() {
     console.log(publishableKey);
     console.log(res);
     setIsOrderProcessing(true);
-    localStorage.setItem("stripe", "stripe");
+    localStorage.setItem("stripe", JSON.stringify(true));
     localStorage.setItem("checkoutFormData", JSON.stringify(checkOutFormData));
 
     const { error } = await stripe.redirectToCheckout({
@@ -57,13 +73,15 @@ function Checkout() {
     console.log(error);
   }
 
-  async function getAlladdress() {
+  async function getAlladdressAndCartItems() {
     const res = await fetchAllAddress(user._id);
     if (res.success) setAddresses(res.data);
+    const cartres = await getAllCartITems(user._id);
+    if (cartres.success) setCartItems(cartres.data);
   }
 
   function handleSelectedAddress(getAddress: ShippingAddressType) {
-    if (getAddress._id === selectedAddress) {
+    if (getAddress?._id === selectedAddress) {
       setSelectedAddress(null);
       setCheckOutFormData({
         ...checkOutFormData,
@@ -85,10 +103,102 @@ function Checkout() {
       },
     });
   }
+
   useEffect(() => {
-    if (user._id !== null) getAlladdress();
+    if (user._id !== null) {
+      getAlladdressAndCartItems();
+    }
   }, [user]);
 
+  useEffect(() => {
+    async function createFinalOrder() {
+      const isStripeStored = localStorage.getItem("stripe");
+      const isStripe = JSON.parse(
+        isStripeStored !== null ? isStripeStored : "false"
+      );
+      if (
+        isStripe &&
+        params.get("status") === "success" &&
+        cartItems &&
+        cartItems.length > 0
+      ) {
+        setIsOrderProcessing(true);
+        const checkoutFormDataStore = localStorage.getItem("checkoutFormData");
+        const getCheckOutFormData = JSON.parse(
+          checkoutFormDataStore !== null ? checkoutFormDataStore : "{}"
+        );
+        const createFinalCheckouFormData = {
+          user: user?._id,
+          shippingAddress: getCheckOutFormData.shippingAddress,
+          orderItems: cartItems.map((item) => ({
+            qty: 1,
+            product: item.productID,
+          })),
+          paymentMethod: "Stripe",
+          totalPrice: cartItems.reduce(
+            (total, item) => item.productID.price + total,
+            0
+          ),
+          isPaid: true,
+          isProcessing: true,
+          paidAt: new Date(),
+        };
+
+        const res: NextResponseProps = await createNewOrder(
+          createFinalCheckouFormData
+        );
+
+        if (res.success) {
+          setIsOrderProcessing(false);
+          toast.success(res.message, { position: "top-right" });
+          setOrDerSuccess(true);
+        } else {
+          toast.error(res.message, { position: "top-right" });
+          setIsOrderProcessing(false);
+          setOrDerSuccess(false);
+        }
+      }
+    }
+    createFinalOrder();
+  }, [params.get("status"), cartItems]);
+  useEffect(() => {
+    if (orderSuccess) {
+      setTimeout(() => {
+        router.push("/orders");
+      }, 2000);
+    }
+  }, [orderSuccess]);
+
+  if (orderSuccess) {
+    return (
+      <section className="h-screen bg-gray-200">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto mt-8 max-w-screen-xl px-4 sm:px-6 lg:px-8 ">
+            <div className="bg-white shadow">
+              <div className="px-4 py-6 sm:px-8 sm:py-10 flex flex-col gap-5">
+                <h1 className="font-bold text-lg">
+                  Your payment is successfull and you will be redirected to
+                  orders page in 2 seconds !
+                </h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+  if (isOrderprocessing) {
+    return (
+      <div className="w-full min-h-screen flex justify-center items-center">
+        <PulseLoader
+          color={"#000000"}
+          loading={isOrderprocessing}
+          size={30}
+          data-testid="loader"
+        />
+      </div>
+    );
+  }
   return (
     <>
       <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32 ">
@@ -193,7 +303,8 @@ function Checkout() {
               <button
                 disabled={
                   (cartItems && cartItems.length === 0) ||
-                  Object.keys(checkOutFormData.shippingAddress).length === 0
+                  Object.keys(checkOutFormData.shippingAddress).length === 0 ||
+                  selectedAddress === null
                 }
                 onClick={handleCheckout}
                 className="disabled:opacity-50 mt-5 mr-5 w-full  inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide"
