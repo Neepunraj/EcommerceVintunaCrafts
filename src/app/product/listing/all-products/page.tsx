@@ -5,7 +5,7 @@ import { NextResponseProps } from "../../../../interfaces/index";
 
 async function AllProduct() {
   const getAllProducts: NextResponseProps = await getAllAdminProducts();
-  console.log(getAllProducts.data);
+
   return <CommonListing data={getAllProducts && getAllProducts.data} />;
 }
 

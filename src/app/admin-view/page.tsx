@@ -27,7 +27,7 @@ const AdminView = () => {
       setPageLevelLoader(false);
       setAllOrdersFroAllUsers(
         res.data && res.data.length
-          ? res.data.filter((item) => item.user?._id !== user._id)
+          ? res.data.filter((item) => item.user?._id !== user?._id)
           : []
       );
     } else {
@@ -41,7 +41,7 @@ const AdminView = () => {
       ...getItem,
       isProcessing: false,
     });
-    console.log(res);
+
     if (res.success) {
       setComponentLevelLoader({ loading: false, id: getItem._id });
       extractOrdersForAllUser();
@@ -50,7 +50,7 @@ const AdminView = () => {
     }
   }
   useEffect(() => {
-    if (user !== null && user.role === "admin") extractOrdersForAllUser();
+    if (user !== null) extractOrdersForAllUser();
   }, [user]);
   if (pagelevelLoader) {
     return (

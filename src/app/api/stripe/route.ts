@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
         success_url: "http://localhost:3000/checkout" + "?status=success",
         cancel_url: "http://localhost:3000/checkout" + "?status=cancel",
       });
-      console.log(res);
+
       return NextResponse.json({
         success: true,
         id: session.id,
@@ -33,7 +33,6 @@ export async function POST(req: NextRequest) {
       });
     }
   } catch (e) {
-    console.log(e);
     return NextResponse.json({
       status: 500,
       success: false,

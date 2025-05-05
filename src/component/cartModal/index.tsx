@@ -52,7 +52,6 @@ function CartModal() {
   }, [user]);
 
   async function handleDeletFromCart(cartID: any) {
-    console.log(cartID);
     setComponentLevelLoader({ loading: true, id: "" });
     const res = await deleteFromCart(cartID);
 

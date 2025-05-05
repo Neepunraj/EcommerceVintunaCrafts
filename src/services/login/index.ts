@@ -15,7 +15,7 @@ export const login = async (formData: LoginUserProps) => {
       throw new Error(errorData.message || "unexpected Error During Login ");
     }
     const data = await response.json();
-    console.log(data);
+
     return data;
   } catch (error: any) {
     console.error("Error fetching Login Details", error);

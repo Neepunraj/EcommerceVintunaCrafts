@@ -46,7 +46,7 @@ function Checkout() {
       console.log("Stripe is not initialized properly");
       return;
     }
-    console.log(stripe);
+
     const createLineItems = cartItems.map((item) => ({
       price_data: {
         currency: "usd",
@@ -60,8 +60,7 @@ function Checkout() {
     }));
 
     const res = await callStripeSession(createLineItems);
-    console.log(publishableKey);
-    console.log(res);
+
     setIsOrderProcessing(true);
     localStorage.setItem("stripe", JSON.stringify(true));
     localStorage.setItem("checkoutFormData", JSON.stringify(checkOutFormData));

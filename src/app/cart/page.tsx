@@ -54,7 +54,6 @@ function Cart() {
       loading: true,
       id: "",
     });
-    console.log(getCartItemID);
 
     const res = await deleteFromCart(getCartItemID);
     if (res.success) {

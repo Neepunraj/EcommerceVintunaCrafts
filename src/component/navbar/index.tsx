@@ -1,7 +1,7 @@
 "use client";
 import { adminNavOptions, navOptions } from "@/utils";
 import { usePathname, useRouter } from "next/navigation";
-import { FC, Fragment, useContext, useState } from "react";
+import { FC, Fragment, useContext, useEffect, useState } from "react";
 import CommonModal from "../commonModal";
 import { GlobalContext, initialUser } from "@/context";
 import { NavITems } from "@/interfaces";
@@ -59,12 +59,18 @@ const Navbar: FC = () => {
     setUser,
     showCartModal,
     setShowCartModal,
+    productToUpdate,
+    setProductToUpdate,
   } = context;
 
   const router = useRouter();
   const pathName = usePathname();
   const isAdminView = pathName.includes("/admin-view");
-
+  useEffect(() => {
+    if (pathName !== "/admin-view/add-product" && productToUpdate !== null) {
+      setProductToUpdate(null);
+    }
+  }, [pathName]);
   function handleLogOut() {
     setIsAuthUser(false);
     setUser(initialUser);
