@@ -23,7 +23,7 @@ export type GlobalContextType = {
   setProduct: (item: ProductDataType) => void;
   pagelevelLoader: boolean;
   setPageLevelLoader: (value: boolean) => void;
-  user: UserProps | null;
+  user: UserProps;
   setUser: (user: UserProps) => void;
   isAuthUser: boolean;
   setIsAuthUser: (value: boolean) => void;
@@ -105,7 +105,7 @@ const defaultContextValue: GlobalContextType = {
   setProduct: () => {},
   pagelevelLoader: false,
   setPageLevelLoader: () => {},
-  user: null,
+  user: initialUser,
   setUser: () => {},
   isAuthUser: false,
   setIsAuthUser: () => {},
@@ -153,7 +153,7 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
   const [componentLevelLoader, setComponentLevelLoader] =
     useState(initalLoading);
   const [isAuthUser, setIsAuthUser] = useState(false);
-  const [user, setUser] = useState<UserProps | null>(null);
+  const [user, setUser] = useState<UserProps>(initialUser);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [showCartModal, setShowCartModal] = useState(false);
   const [addresses, setAddresses] = useState<ShippingAddressType[]>([]);
@@ -179,10 +179,10 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
       setUser(userData);
     } else {
       setIsAuthUser(false);
-      setUser(null);
+      setUser(initialUser);
     }
   }, [Cookies]);
-  useEffect(() => {
+  /*   useEffect(() => {
     if (
       protectedRoutes.some((route) => pathname.includes(route)) &&
       pathname &&
@@ -194,9 +194,9 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
     ) {
       router.push("/login");
     }
-  }, [pathname, user]);
+  }, [pathname, user]); */
 
-  console.log(user, user?.role);
+  console.log(user, user.role);
   console.log(protectedAdminRoutes.indexOf(pathname));
   useEffect(() => {
     if (protectedAdminRoutes.indexOf(pathname) > -1) {
