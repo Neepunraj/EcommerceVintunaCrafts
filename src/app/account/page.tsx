@@ -3,7 +3,11 @@ import InputComponent from "@/component/formElements/inputComponent";
 import ComponentLevelLoader from "@/component/loader/componentlevel";
 import Notification from "@/component/Notification";
 import { GlobalContext, initialAddress } from "@/context";
-import { NextResponseProps, ShippingAddressType } from "@/interfaces";
+import {
+  LoginFormControls,
+  NextResponseProps,
+  ShippingAddressType,
+} from "@/interfaces";
 import {
   addNewAddress,
   deleteAddres,
@@ -15,9 +19,17 @@ import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
 import { toast } from "react-toastify";
+import { loginFormcontrols } from "../../utils/index";
 
 interface Props {}
-
+type formDatart = keyof LoginFormControls;
+const intialLogin: LoginFormControls = {
+  id: "",
+  type: "",
+  placeholder: "",
+  label: "",
+  componentType: "",
+};
 function Page(props: Props) {
   const {
     user,
@@ -34,6 +46,8 @@ function Page(props: Props) {
   const [currentEditedAddressID, setCurrentEditedAdressID] = useState<
     string | null
   >(null);
+  const [addressFromData1, setAddressFormData1] =
+    useState<LoginFormControls>(intialLogin);
   const router = useRouter();
   async function extractAllAdress() {
     setPageLevelLoader(false);
@@ -186,21 +200,23 @@ function Page(props: Props) {
             {showAddressForm ? (
               <div className="mt-5">
                 <div className="w-full mt-6 mr-0 ml-0 space-y-8">
-                  {addNewAddressFormControls.map((controlITem) => (
-                    <InputComponent
-                      key={controlITem.id}
-                      type={controlITem.type}
-                      placeholder={controlITem.placeholder}
-                      label={controlITem.label}
-                      value={addressFromData[controlITem.id]}
-                      onChange={(event) =>
-                        setAddressFormData({
-                          ...addressFromData,
-                          [controlITem.id]: event.target.value,
-                        })
-                      }
-                    />
-                  ))}
+                  {addNewAddressFormControls.map(
+                    (controlITem: LoginFormControls) => (
+                      <InputComponent
+                        key={controlITem.id}
+                        type={controlITem.type}
+                        placeholder={controlITem.placeholder}
+                        label={controlITem.label}
+                        value={addressFromData1[controlITem.id as formDatart]}
+                        onChange={(event) =>
+                          setAddressFormData({
+                            ...addressFromData,
+                            [controlITem.id]: event.target.value,
+                          })
+                        }
+                      />
+                    )
+                  )}
                 </div>
                 <button
                   onClick={handleAddorUpdateAddress}
