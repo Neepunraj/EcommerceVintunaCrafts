@@ -95,7 +95,7 @@ export type Product = {
   description: string;
   price: number;
   category: string;
-  sizes: Size[];
+  sizes: string[];
   deliveryInfo: string;
   onSale: "yes" | "no";
   imageUrl: string;
