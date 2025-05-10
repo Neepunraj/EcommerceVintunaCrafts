@@ -19,7 +19,6 @@ import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
 import { toast } from "react-toastify";
-import { loginFormcontrols } from "../../utils/index";
 
 interface Props {}
 type formDatart = keyof LoginFormControls;
@@ -30,7 +29,7 @@ const intialLogin: LoginFormControls = {
   label: "",
   componentType: "",
 };
-function Page(props: Props) {
+function Account() {
   const {
     user,
     pagelevelLoader,
@@ -244,4 +243,4 @@ function Page(props: Props) {
   );
 }
 
-export default Page;
+export default Account;

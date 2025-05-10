@@ -1,10 +1,6 @@
 "use client";
 import Notification from "@/component/Notification";
-import {
-  GlobalContext,
-  initialAddress,
-  intialCheckoutFormData,
-} from "@/context";
+import { GlobalContext, initialAddress } from "@/context";
 import { useRouter, useSearchParams } from "next/navigation";
 import { loadStripe, Stripe } from "@stripe/stripe-js";
 import React, { useContext, useEffect, useState } from "react";
@@ -27,7 +23,7 @@ function Checkout() {
     user,
   } = useContext(GlobalContext);
 
-  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const [isOrderprocessing, setIsOrderProcessing] = useState(false);
   const [orderSuccess, setOrDerSuccess] = useState(false);
   const router = useRouter();
@@ -89,7 +85,7 @@ function Checkout() {
       return;
     }
 
-    setSelectedAddress(getAddress._id);
+    setSelectedAddress(getAddress?._id!);
     setCheckOutFormData({
       ...checkOutFormData,
       shippingAddress: {
