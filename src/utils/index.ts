@@ -262,3 +262,4 @@ export const firebaseConfig = {
   measurementId: "G-1ZQMG041MG",
 };
 export const firebaseStorageURL = "gs://next-js-ecommerce-7404c.appspot.com";
+/*  */
