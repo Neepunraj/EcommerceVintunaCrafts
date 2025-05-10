@@ -15,7 +15,7 @@ export interface NavITems {
 export interface InputComponettypes {
   label: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  value: string | string[] | number | Size[];
+  value: string | string[] | number;
   type: string;
   placeholder: string;
 }
@@ -43,7 +43,7 @@ export interface SelectComponentProps {
   options?: Selectoptions[];
   label: string;
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-  value: string | string[] | number | Size[];
+  value: string | string[] | number;
 }
 export interface UserDataProps {
   _id?: string;
@@ -72,7 +72,7 @@ export type ProductDataType = {
   description: string;
   price: number | string;
   category: string;
-  sizes: Size[];
+  sizes: string[];
   deliveryInfo: string;
   onSale: "yes" | "no";
   imageUrl: string;

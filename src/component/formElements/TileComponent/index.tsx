@@ -1,11 +1,9 @@
-import { SizeTypes } from "@/utils";
-import React, { MouseEventHandler } from "react";
 interface DataItem {
   id: string;
   label: string;
 }
 interface TileComponentProps {
-  selected: SizeTypes[];
+  selected: string[];
   onClick: (item: DataItem) => void;
   data: DataItem[];
 }
@@ -19,7 +17,7 @@ function TileComponent({ selected = [], onClick, data }: TileComponentProps) {
           className={`cursor-pointer ${
             selected &&
             selected.length &&
-            selected.map((item) => item.id).indexOf(dataitem.id) !== -1
+            selected.map((item) => item).indexOf(dataitem.id) !== -1
               ? "bg-black"
               : ""
           }`}
@@ -29,7 +27,7 @@ function TileComponent({ selected = [], onClick, data }: TileComponentProps) {
             ${
               selected &&
               selected.length &&
-              selected.map((item) => item.id).indexOf(dataitem.id) !== -1
+              selected.map((item) => item).indexOf(dataitem.id) !== -1
                 ? "text-white"
                 : ""
             }

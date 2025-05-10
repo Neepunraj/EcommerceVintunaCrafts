@@ -70,7 +70,7 @@ async function helperForUploadingImageTOFireBase(file: any) {
 
 const AdminAddNewProduct: FC = () => {
   const [formData, setformData] = useState<ProductDataType>(initialFormdata);
-  console.log(formData);
+
   const {
     componentLevelLoader,
     setComponentLevelLoader,
@@ -100,11 +100,11 @@ const AdminAddNewProduct: FC = () => {
   function handleSizeClick(getcurrentITem: DataItem) {
     let cpysizes = [...formData.sizes];
     console.log(cpysizes);
-    const index = cpysizes.findIndex((item) => item.id === getcurrentITem.id);
+    const index = cpysizes.findIndex((item) => item === getcurrentITem.id);
     if (index === -1) {
-      cpysizes.push(getcurrentITem);
+      cpysizes.push(getcurrentITem.id);
     } else {
-      cpysizes = cpysizes.filter((item) => item.id !== getcurrentITem.id);
+      cpysizes = cpysizes.filter((item) => item !== getcurrentITem.id);
     }
     setformData({
       ...formData,
