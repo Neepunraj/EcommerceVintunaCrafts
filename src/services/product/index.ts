@@ -1,5 +1,6 @@
 import Cookies from "js-cookie";
-
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
 export const AddNewPrdocut = async (formData: any) => {
   try {
     const response = await fetch("/api/admin/add-product", {
@@ -26,13 +27,10 @@ export const AddNewPrdocut = async (formData: any) => {
 
 export const getAllAdminProducts = async () => {
   try {
-    const response = await fetch(
-      "http://localhost:3000/api/admin/all-products",
-      {
-        method: "GET",
-        cache: "no-store",
-      }
-    );
+    const response = await fetch(`${API_BASE_URL}/api/admin/all-products`, {
+      method: "GET",
+      cache: "no-store",
+    });
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(
@@ -81,7 +79,7 @@ export const DeleteProduct = async (id: string) => {
 export const productById = async (id: any) => {
   try {
     const resp = await fetch(
-      `http://localhost:3000/api/admin/product-by-id?id=${id}`,
+      `${API_BASE_URL}/api/admin/product-by-id?id=${id}`,
       {
         method: "GET",
         cache: "no-store",
@@ -98,7 +96,7 @@ export const productById = async (id: any) => {
 export const productByCategory = async (id: string) => {
   try {
     const res = await fetch(
-      `http://localhost:3000/api/admin/product-by-category?id=${id}`,
+      `${API_BASE_URL}/api/admin/product-by-category?id=${id}`,
       {
         method: "GET",
         cache: "no-store",

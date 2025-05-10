@@ -1,5 +1,4 @@
 import connectToDB from "@/database";
-import { ShippingAddressType } from "@/interfaces";
 import AuthUSer from "@/middleware/AuthUSer";
 import Address from "@/models/address";
 import Joi from "joi";
