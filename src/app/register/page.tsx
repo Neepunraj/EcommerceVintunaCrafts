@@ -4,7 +4,7 @@ import SelectComponent from "@/component/formElements/selectComponent";
 import ComponentLevelLoader from "@/component/loader/componentlevel";
 import Notification from "@/component/Notification";
 import { GlobalContext, GlobalContextType } from "@/context";
-import { UserDataProps } from "@/interfaces";
+import { UserDataProps, UserDataPropsWithoutID } from "@/interfaces";
 import { registerAccount } from "@/services/register";
 import { registrationFormControls } from "@/utils";
 import { useRouter } from "next/navigation";
@@ -17,7 +17,7 @@ const initialFormData = {
   password: "",
   role: "costumer",
 };
-type FormDataKeys = keyof UserDataProps;
+type FormDataKeys = keyof UserDataPropsWithoutID;
 
 const Register: FC = () => {
   const [formData, setFormData] = useState<UserDataProps>(initialFormData);
