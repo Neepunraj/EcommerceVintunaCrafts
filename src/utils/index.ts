@@ -110,6 +110,7 @@ export const loginFormcontrols = [
     componentType: "input",
   },
 ];
+
 export const adminAddProductformControls = [
   {
     id: "name",

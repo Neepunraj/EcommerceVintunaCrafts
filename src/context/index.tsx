@@ -198,11 +198,11 @@ const GlobalState: FC<GlobbalStateProps> = ({ children }) => {
 
   console.log(user, user.role);
   console.log(protectedAdminRoutes.indexOf(pathname));
-  useEffect(() => {
+  /*   useEffect(() => {
     if (protectedAdminRoutes.indexOf(pathname) > -1) {
       router.push("/login");
     }
-  }, [user, pathname]);
+  }, [user, pathname]); */
   return (
     <GlobalContext.Provider
       value={{
